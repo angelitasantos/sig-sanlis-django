@@ -1,0 +1,65 @@
+{% extends 'company/base.html' %}
+{% load static %}
+{% block 'title' %} {{ title }} {% endblock %}
+
+{% block 'container %}
+
+<main class="container-fluid py-3">
+
+    {% include 'messages.html' %}
+
+    <section class="row">
+
+        <div class="col-md-9">
+            <h2 class="text-success">Gerenciar Empresas</h2>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{% url 'company_create' %}"><button class="btn-success px-5 mb-2">Nova Empresa</button></a>
+        </div>
+
+    </section>
+
+    <section class="body-box">
+
+        <table class="table table-sm table-responsive-sm table-hover mt-2">
+
+            <thead class="">
+                <tr>
+                    <th>Nome Fantasia</th>
+                    <th>Token</th>
+                    <th>Phone1</th>
+                    <th>Phone2</th>
+                    <th>CNPJ</th>
+                    <th>Razão Social</th>
+                    <th>Email</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+
+            <tbody class="table-group-divider">
+                {% for company in companies %}
+                <tr class="tabela-linha">
+                    <td><a href="{% url 'company_view' company.id %}">{{ company.name }}</a></td>
+                    <td>{{ company.token_company }}</td>
+                    <td>{{ company.phone }}</td>
+                    <td>{{ company.whatsapp_number }}</td>
+                    <td>{{ company.cnpj }}</td>
+                    <td>{{ company.full_name }}</td>
+                    <td>{{ company.email }}</td>
+                    <td>
+                        <img src="">
+                    </td>
+                    <td><a class="btn-sm btn-danger" href="{% url 'company_delete' company.id %}"
+                        onclick="return confirm('Você tem certeza que deseja excluir esta empresa ?')"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+        
+    </section>
+
+</main>
+{% endblock %}

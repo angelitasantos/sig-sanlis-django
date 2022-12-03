@@ -1,0 +1,42 @@
+{% extends 'plataform/base.html' %}
+{% load static %}
+{% block 'title' %} {{ title }} {% endblock %}
+
+{% block 'container %}
+
+<main class="container-fluid py-3">
+
+    {% include 'messages.html' %}
+
+    <section  class="row mt-2">
+
+        <div class="col-md-2"></div>
+
+        <div class="col-md-8">
+            <a href="{% url 'company_update' company.id %}" class="link-hover">
+                <div class="card-cliente text-center mb-3">
+                    <div class="perfil mb-1">
+                        <img src="{% static 'img/logo.png' %}">
+                    </div>
+                    <p class="dados">{{ company.name }}</p>
+                    <p class="dados">CNPJ {{ company.cnpj }}</p>
+                    <p class="dados">Email {{ company.email }}</p>
+                    <p class="dados">Tel.: {{ company.phone }}</p>
+                    <p class="dados">Tel.: {{ company.whatsapp_number }}</p>
+                    
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-2"></div>
+
+    </section>
+
+    <div class="container-fluid">
+        
+        <h1>Usuários</h1>
+        
+    </div>
+
+</main>
+{% endblock%}
