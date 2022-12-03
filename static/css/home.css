@@ -331,6 +331,7 @@ a:hover {
 
 #image1 {
     background-image: url('img/home/image1.webp');
+    background: linear-gradient(left, rgba(147, 184, 189, 0) 0%, rgba(147, 184, 189, 0.8) 20%, rgba(147, 184, 189, 1) 53%, rgba(147, 184, 189, 0.8) 79%, rgba(147, 184, 189, 0) 100%);
 }
 
 #image2 {
