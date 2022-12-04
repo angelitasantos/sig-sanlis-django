@@ -6,6 +6,8 @@
 
 <main class="container-fluid py-3">
 
+    {% include 'company/breadcrumb.html' %}
+
     {% include 'messages.html' %}
 
     <section class="row">
@@ -15,12 +17,28 @@
         </div>
 
         <div class="col-md-3">
-            <a href="{% url 'company_create' %}"><button class="btn-success px-5 mb-2">Nova Empresa</button></a>
+            <a href="{% url 'company_create' %}">
+                <button class="btn-success px-5 mb-2">Nova Empresa</button></a>
         </div>
 
     </section>
 
     <section class="body-box">
+
+        <form action="{% url 'companies' %}" method="GET">
+            {% csrf_token %}
+            <div class="row">
+                
+                <section class="col-md-5 mb-2">
+                    <input type="text" placeholder="Buscar pelo Nome Fantasia" class="form-control" name="name">
+                </section>
+                
+                <section class="col-md-2">
+                    <input type="submit" value="FILTRAR" class="btn btn-success px-5">
+                </section>
+
+            </div>
+        </form>
 
         <table class="table table-sm table-responsive-sm table-hover mt-2">
 
@@ -31,8 +49,7 @@
                     <th>Phone1</th>
                     <th>Phone2</th>
                     <th>CNPJ</th>
-                    <th>Razão Social</th>
-                    <th>Email</th>
+                    <th>Usuário Main</th>
                     <th>Excluir</th>
                 </tr>
             </thead>
@@ -45,13 +62,14 @@
                     <td>{{ company.phone }}</td>
                     <td>{{ company.whatsapp_number }}</td>
                     <td>{{ company.cnpj }}</td>
-                    <td>{{ company.full_name }}</td>
-                    <td>{{ company.email }}</td>
-                    <td>
-                        <img src="">
+                    <td>                               
+                        {% for user in users %} 
+                            <option value="{{ user.id }}">{{ user.username }}</option> 
+                        {% endfor %}
                     </td>
                     <td><a class="btn-sm btn-danger" href="{% url 'company_delete' company.id %}"
-                        onclick="return confirm('Você tem certeza que deseja excluir esta empresa ?')"><i class="fa fa-trash"></i></a>
+                        onclick="return confirm('Você tem certeza que deseja excluir esta empresa ?')">
+                        <i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -62,4 +80,5 @@
     </section>
 
 </main>
+
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'plataform/base.html' %}
+{% extends 'company/base.html' %}
 {% load static %}
 {% block 'title' %} {{ title }} {% endblock %}
 
@@ -6,37 +6,155 @@
 
 <main class="container-fluid py-3">
 
-    {% include 'messages.html' %}
+    {% include 'company/breadcrumb.html' %}
 
-    <section  class="row mt-2">
+    <div class="container-fluid mb-5">
 
-        <div class="col-md-2"></div>
+        <section class="text-center mb-3">
+            <h3 class="text-success">Visualizar Empresa</h3>
+            {% include 'messages.html' %}
+        </section>        
+        
+        <section class="row ">
 
-        <div class="col-md-8">
-            <a href="{% url 'company_update' company.id %}" class="link-hover">
-                <div class="card-cliente text-center mb-3">
-                    <div class="perfil mb-1">
-                        <img src="{% static 'img/logo.png' %}">
+            <div class="col-md-12 border border-success py-2">
+
+                <form action="{% url 'company_update' company.id %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="row my-2">
+                        <div class="col-sm-9"></div>
+                        <div class="col-sm-3">
+                            <input type="submit" class="btn btn-success btn-sm px-5 " value="Alterar os Dados">
+                        </div>
                     </div>
-                    <p class="dados">{{ company.name }}</p>
-                    <p class="dados">CNPJ {{ company.cnpj }}</p>
-                    <p class="dados">Email {{ company.email }}</p>
-                    <p class="dados">Tel.: {{ company.phone }}</p>
-                    <p class="dados">Tel.: {{ company.whatsapp_number }}</p>
-                    
-                </div>
-            </a>
-        </div>
 
-        <div class="col-md-2"></div>
+                    <div class="row">
+                        <div>
+                            <input type="hidden" class="form-control" value="{{ company.id }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Token *</span>
+                            <input type="text" class="form-control" disabled value="{{ company.token_company }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Nome Fantasia *</span>
+                            <input type="text" class="form-control" disabled value="{{ company.name }}">
+                        </div>
+                        <div class="col-sm-5">
+                            <span>Razão Social *</span>
+                            <input type="text" class="form-control" disabled value="{{ company.full_name }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Usuário</span>
+                            <select class="form-control">                                
+                                <option value="{{ company.user_company_id }}">{{ user.username }}</option>
+                            </select>
+                        </div>
+                    </div>
 
-    </section>
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <span>Inicio Atividade</span>
+                            <input type="text" class="form-control" disabled value="{{ company.start_data }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>CNPJ</span>
+                            <input type="text" class="form-control" disabled value="{{ company.cnpj }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Insc.Est.</span>
+                            <input type="text" class="form-control" disabled value="{{ company.insc_est }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Insc.Mun.</span>
+                            <input type="text" class="form-control" disabled value="{{ company.insc_mun }}">
+                        </div>
+                    </div>
 
-    <div class="container-fluid">
-        
-        <h1>Usuários</h1>
-        
+                    <div class="row mt-2">
+                        <div class="col-sm-5">
+                            <span>Endereço</span>
+                            <input type="text" class="form-control" disabled value="{{ company.street }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Numero</span>
+                            <input type="text" class="form-control" disabled value="{{ company.number }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Complemento</span>
+                            <input type="text" class="form-control" disabled value="{{ company.complement }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Bairro</span>
+                            <input type="text" class="form-control" disabled value="{{ company.district }}">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-4">
+                            <span>Cidade</span>
+                            <input type="text" class="form-control" disabled value="{{ company.city }}">
+                        </div>
+                        <div class="col-sm-1">
+                            <span>UF</span>
+                            <input type="text" class="form-control" disabled value="{{ company.state }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>CEP</span>
+                            <input type="text" class="form-control" disabled value="{{ company.zipcode }}">
+                        </div>
+                        <div class="col-sm-5">
+                            <span>Google Maps Link:</span>
+                            <input type="text" class="form-control" disabled value="{{ company.google_maps_link }}">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-4">
+                            <span>Email</span>
+                            <input type="email" class="form-control" disabled value="{{ company.email }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Telefone 1</span>
+                            <input type="text" class="form-control" disabled value="{{ company.phone }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Telefone 2</span>
+                            <input type="text" class="form-control" disabled value="{{ company.whatsapp_number }}">
+                        </div>
+                        <div class="col-sm-4">
+                            <span>Whatsapp Link</span>
+                            <input type="text" class="form-control" disabled value="{{ company.whatsapp_link }}">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2 mb-3">
+                        <div class="col-sm-3">
+                            <span>Site</span>
+                            <input type="text" class="form-control" disabled value="{{ company.site_link }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Instagram</span>
+                            <input type="text" class="form-control" disabled value="{{ company.instagram_link }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Linkedin</span>
+                            <input type="text" class="form-control" disabled value="{{ company.linkedin_link }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Facebook</span>
+                            <input type="text" class="form-control" disabled value="{{ company.facebook_link }}">
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+            
+        </section>
     </div>
-
+    
 </main>
+
 {% endblock%}

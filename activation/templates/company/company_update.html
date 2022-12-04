@@ -1,16 +1,165 @@
-{% extends 'base_user.html' %}
+{% extends 'company/base.html' %}
 {% load static %}
 {% block 'title' %} {{ title }} {% endblock %}
 
 {% block 'container %}
 
 <main class="container-fluid py-3">
+
+    {% include 'company/breadcrumb.html' %}
+
+    <div class="container-fluid mb-5">
+
+        <section class="text-center mb-3">
+            <h3 class="text-success">Alterar Empresa</h3>
+            {% include 'messages.html' %}
+        </section>
         
-    <h1>Create Update</h1>
-    <h2>Em construção</h2>
+        <section class="row">
 
-    <a href="{% url 'company_view' company.id %}"> Voltar para Visualização da Empresa </a>
+            <div class="col-md-12 border border-success py-2">
 
+                <form action="{% url 'company_update' company.id %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="row mt-2">
+                        <div>
+                            <input type="hidden" class="form-control" name="id" value="{{ company.id }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Token *</span>
+                            <input type="text" class="form-control" disabled name="token_company" value="{{ company.token_company }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Nome Fantasia *</span>
+                            <input type="text" class="form-control" disabled name="name" value="{{ company.name }}">
+                        </div>
+                        <div class="col-sm-5">
+                            <span>Razão Social *</span>
+                            <input type="text" class="form-control" disabled name="full_name" value="{{ company.full_name }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Usuário</span>
+                            <select class="form-control" name="user_company">                                
+                                {% for user in users %} 
+                                    <option value="{{ company.user_company_id }}">{{ user.username }}</option>
+                                    <option value="{{ user.id }}">{{ user.username }}</option> 
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <span>Inicio Atividade</span>
+                            <input type="text" class="form-control" name="start_data" value="{{ company.start_data }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>CNPJ</span>
+                            <input type="text" class="form-control" name="cnpj" value="{{ company.cnpj }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Insc.Est.</span>
+                            <input type="text" class="form-control" name="insc_est" value="{{ company.insc_est }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Insc.Mun.</span>
+                            <input type="text" class="form-control" name="insc_mun" value="{{ company.insc_mun }}">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-5">
+                            <span>Endereço</span>
+                            <input type="text" class="form-control" name="street" value="{{ company.street }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Numero</span>
+                            <input type="text" class="form-control" name="number" value="{{ company.number }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Complemento</span>
+                            <input type="text" class="form-control" name="complement" value="{{ company.complement }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Bairro</span>
+                            <input type="text" class="form-control" name="district" value="{{ company.district }}">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-4">
+                            <span>Cidade</span>
+                            <input type="text" class="form-control" name="city" value="{{ company.city }}">
+                        </div>
+                        <div class="col-sm-1">
+                            <span>UF</span>
+                            <input type="text" class="form-control" name="state" value="{{ company.state }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>CEP</span>
+                            <input type="text" class="form-control" name="zipcode" value="{{ company.zipcode }}">
+                        </div>
+                        <div class="col-sm-5">
+                            <span>Google Maps Link:</span>
+                            <input type="text" class="form-control" name="google_maps_link" value="{{ company.google_maps_link }}">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-4">
+                            <span>Email</span>
+                            <input type="email" class="form-control" name="email" value="{{ company.email }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Telefone 1</span>
+                            <input type="text" class="form-control" name="phone" value="{{ company.phone }}">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Telefone 2</span>
+                            <input type="text" class="form-control" name="whatsapp_number" value="{{ company.whatsapp_number }}">
+                        </div>
+                        <div class="col-sm-4">
+                            <span>Whatsapp Link</span>
+                            <input type="text" class="form-control" name="whatsapp_link" value="{{ company.whatsapp_link }}">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <span>Site</span>
+                            <input type="text" class="form-control" name="site_link" value="{{ company.site_link }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Instagram</span>
+                            <input type="text" class="form-control" name="instagram_link" value="{{ company.instagram_link }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Linkedin</span>
+                            <input type="text" class="form-control" name="linkedin_link" value="{{ company.linkedin_link }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Facebook</span>
+                            <input type="text" class="form-control" name="facebook_link" value="{{ company.facebook_link }}">
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col-sm-10">
+                            <h6>* Token, Nome Fantasia e Razão Social não podem ficar vazios.</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="submit" class="btn btn-success btn-sm px-5" value="Alterar">
+                        </div>
+                    </div>
+                    
+                </form>
+
+            </div>
+            
+        </section>
+    </div>
+    
 </main>
 
 {% endblock%}
