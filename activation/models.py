@@ -1,5 +1,4 @@
 from django.db import models
-from typing import Optional
 from django.contrib.auth.models import User
 
 class Company(models.Model):
@@ -35,3 +34,13 @@ class Company(models.Model):
 
 def __str__(self):
     return self.name
+
+
+class TokenUser(models.Model):
+    token = models.CharField(max_length=64)
+    active = models.BooleanField(default=False)
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return self.user.username

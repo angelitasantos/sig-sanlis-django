@@ -17,7 +17,9 @@
      <nav class="navbar navbar-dark bg-dark">
       <a class="navbar-brand" href="{% url 'home' %}">SANLIS</a>
       <form class="form-inline">
-        <a href="{% url 'logout' %}" class="btn btn-outline-success btn-sm mr-2">Logout</a>
+        <a href="{% url 'logout' %}"
+          onclick="return confirm('Você tem certeza que deseja sair do painel?')"
+          class="btn btn-outline-success btn-sm mr-2">Logout</a>
       </form>
     </nav>
     {% endif %}

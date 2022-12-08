@@ -2,6 +2,9 @@ import re
 from django.contrib import messages
 from django.contrib.messages import constants
 from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
 
 
 def fields_empty(request, username, email):
@@ -35,3 +38,15 @@ def password_is_valid(request, password, confirm_password):
         return False
 
     return True
+
+
+def email_html(path_template: str, subject: str, user: list, **kwargs) -> dict:
+    
+    html_content = render_to_string(path_template, kwargs)
+    text_content = strip_tags(html_content)
+
+    email = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, user)
+
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+    return {'status': 1}

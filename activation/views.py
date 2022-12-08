@@ -5,20 +5,126 @@ from django.contrib.messages import constants
 from django.contrib.auth.decorators import login_required
 from .models import Company
 from django.contrib.auth.models import User
+from django.contrib import auth
+from django.conf import settings
+import os
+from .utils import password_is_valid, fields_empty, email_html
+from .models import TokenUser, Company
+from hashlib import sha256
 
 
 sig = 'SIG SANLIS | '
 
-
+## Database User
 def register(request):
-    messages.add_message(request, constants.ERROR, 'Erro Interno do Sistema.')
-    return HttpResponse('Pagina Registrar Usuário Funcionando ...')
+    title = 'Registrar'
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            return redirect('/auth/empresas')
+        return render(request, 'user/user_register.html', {'title': title})
+
+    elif request.method == "POST":
+        cnpj = request.POST.get('cnpj')
+        token_company = request.POST.get('token_company')
+        companies = Company.objects.filter(cnpj=cnpj, token_company=token_company)
+            
+        if not companies.exists():
+            messages.add_message(request, constants.ERROR, 'CNPJ e/ou Token Não Conferem !!!')
+            return redirect('/auth/registrar/')
+
+        company_id = companies[0].id     
+        username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        users = User.objects.filter(username=username)
+
+        if users.exists():
+            messages.add_message(request, constants.ERROR, 'Existe um usuário cadastrado com este nome!!!')
+            return redirect('/auth/registrar/')
+
+        if not fields_empty(request, username, email):
+            return redirect('/auth/registrar/')
+
+        if not password_is_valid(request, password, confirm_password):
+            return redirect('/auth/registrar')
+        
+        try:
+            user = User.objects.create_user(    username=username,
+                                                first_name=first_name,
+                                                last_name=last_name,
+                                                email=email,
+                                                password=password,
+                                                is_active=False)
+            user.save()
+
+            token = sha256(f'{username}{email}'.encode()).hexdigest()
+            activation = TokenUser(token=token, user=user, company_id=company_id)
+            activation.save()
+
+            path_template = os.path.join(settings.BASE_DIR, 'activation/templates/user/active_account.html')
+            email_html(path_template, 'Cadastro confirmado', [email,], username=username, link_activation=f"127.0.0.1:8000/auth/ativar_conta/{token}")
+            
+            messages.add_message(request, constants.SUCCESS, 'Usuário Cadastrado com Sucesso !!!')
+            return redirect('/auth/login')
+        except:
+            messages.add_message(request, constants.DEBUG, 'Erro Interno do Sistema !!!')
+            return redirect('/auth/registrar')
+
 
 def login(request):
-    return HttpResponse('Pagina Login Funcionando ...')
+    title = 'Login'
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            return redirect('/empresas')
+        return render(request, 'user/user_login.html', {'title': title})
+    elif request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
+        user_filter = User.objects.filter(username=username)
+
+        if not user_filter.exists():
+            messages.add_message(request, constants.ERROR, 'Usuário Não Existe !!!')
+            return redirect('/auth/login/')
+
+        user_active = User.objects.filter(username=username, is_active=False)
+
+        if user_active.exists():
+            messages.add_message(request, constants.ERROR, 'Usuário Não Ativado !!!')
+            return redirect('/auth/login/')
+
+        user_auth = auth.authenticate(username=username, password=password)
+
+        if not user_auth:
+            messages.add_message(request, constants.ERROR, 'Senha Inválida !!!')
+            return redirect('/auth/login')
+        else:
+            auth.login(request, user_auth)
+            return redirect('/auth/empresas')
+
+
+@login_required(login_url='/auth/login/')
 def logout(request):
-    return HttpResponse('Sair Funcionando ...')
+    auth.logout(request)
+    return redirect('/auth/login')
+
+
+def active_account(request, token):
+    token = get_object_or_404(TokenUser, token=token)
+    if token.active:
+        messages.add_message(request, constants.WARNING, 'Você já ativou sua conta!')
+        return redirect('/auth/login')
+    user = User.objects.get(username=token.user.username)
+    user.is_active = True
+    user.save()
+    token.active = True
+    token.save()
+    messages.add_message(request, constants.SUCCESS, 'Conta Ativada com Sucesso!')
+    return redirect('/auth/login')
 
 
 ## Database Company
@@ -83,7 +189,7 @@ def company_create(request):
         companies = Company.objects.filter(name=name)
 
         if companies.exists():
-            messages.add_message(request, constants.ERROR, 'Já existe uma empresa cadastrada com este Nome!!!')
+            messages.add_message(request, constants.ERROR, 'Já existe uma empresa cadastrada com este nome!!!')
             return redirect('/auth/nova_empresa/')
 
         try:
