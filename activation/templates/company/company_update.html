@@ -28,21 +28,29 @@
                         </div>
                         <div class="col-sm-2">
                             <span>Token *</span>
-                            <input type="text" class="form-control" disabled name="token_company" value="{{ company.token_company }}">
+                            <input type="text" class="form-control" name="token_company" value="{{ company.token_company }}">
                         </div>
                         <div class="col-sm-3">
                             <span>Nome Fantasia *</span>
-                            <input type="text" class="form-control" disabled name="name" value="{{ company.name }}">
+                            <input type="text" class="form-control" name="name" value="{{ company.name }}">
                         </div>
-                        <div class="col-sm-5">
+                        <div class="col-sm-4">
                             <span>Razão Social *</span>
-                            <input type="text" class="form-control" disabled name="full_name" value="{{ company.full_name }}">
+                            <input type="text" class="form-control" name="full_name" value="{{ company.full_name }}">
+                        </div>
+                        <div class="col-sm-1">
+                            <span>Status</span>
+                            <select class="form-control" name="status"> 
+                                <option value="{{ company.status }}">{{ company.status }}</option>                              
+                                <option value="A">Ativo</option>
+                                <option value="I">Inativo</option>
+                            </select>
                         </div>
                         <div class="col-sm-2">
                             <span>Usuário</span>
-                            <select class="form-control" name="user_company">                                
+                            <select class="form-control" name="user_company">     
+                                <option value="{{ company.user_company_id }}">{{ company.user_company }}</option>                           
                                 {% for user in users %} 
-                                    <option value="{{ company.user_company_id }}">{{ user.username }}</option>
                                     <option value="{{ user.id }}">{{ user.username }}</option> 
                                 {% endfor %}
                             </select>
@@ -50,21 +58,30 @@
                     </div>
 
                     <div class="row mt-2">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>Inicio Atividade</span>
-                            <input type="text" class="form-control" name="start_data" value="{{ company.start_data }}">
+                            <input type="text" class="form-control" disabled name="start_data" value="{{ company.start_data|date:'d/m/Y' }}">
                         </div>
                         <div class="col-sm-3">
                             <span>CNPJ</span>
                             <input type="text" class="form-control" name="cnpj" value="{{ company.cnpj }}">
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>Insc.Est.</span>
                             <input type="text" class="form-control" name="insc_est" value="{{ company.insc_est }}">
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>Insc.Mun.</span>
                             <input type="text" class="form-control" name="insc_mun" value="{{ company.insc_mun }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Tipo Empresa</span>
+                            <select class="form-control" name="type_company"> 
+                                <option value="{{ company.type_company }}">{{ company.type_company }}</option>                              
+                                <option value="MEI">Micro Empreendedor Individual</option>
+                                <option value="ME">Microempresa</option>
+                                <option value="EPP">Empresa de Pequeno Porte</option>
+                            </select>
                         </div>
                     </div>
 

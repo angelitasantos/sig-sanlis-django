@@ -49,6 +49,7 @@
                     <th>Phone1</th>
                     <th>Phone2</th>
                     <th>CNPJ</th>
+                    <th>Inicio Atividade</th>
                     <th>Usuário Main</th>
                     <th>Excluir</th>
                 </tr>
@@ -62,10 +63,9 @@
                     <td>{{ company.phone }}</td>
                     <td>{{ company.whatsapp_number }}</td>
                     <td>{{ company.cnpj }}</td>
-                    <td>                               
-                        {% for user in users %} 
-                            <option value="{{ user.id }}">{{ user.username }}</option> 
-                        {% endfor %}
+                    <td>{{ company.start_data }}</td>
+                    <td>               
+                        <span value="{{ company.user_id }}">{{ company.user_company }}</span> 
                     </td>
                     <td><a class="btn-sm btn-danger" href="{% url 'company_delete' company.id %}"
                         onclick="return confirm('Você tem certeza que deseja excluir esta empresa ?')">

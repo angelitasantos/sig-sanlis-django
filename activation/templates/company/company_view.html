@@ -19,13 +19,13 @@
 
             <div class="col-md-12 border border-success py-2">
 
-                <form action="{% url 'company_update' company.id %}" method="POST">
+                <form action="{% url 'company_view' company.id %}" method="GET">
                     {% csrf_token %}
 
                     <div class="row my-2">
                         <div class="col-sm-9"></div>
                         <div class="col-sm-3">
-                            <input type="submit" class="btn btn-success btn-sm px-5 " value="Alterar os Dados">
+                            <a href="{% url 'company_update' company.id %}" type="submit" class="btn btn-success btn-sm px-5 " value="Alterar os Dados">Alterar</a>
                         </div>
                     </div>
 
@@ -47,28 +47,30 @@
                         </div>
                         <div class="col-sm-2">
                             <span>Usuário</span>
-                            <select class="form-control">                                
-                                <option value="{{ company.user_company_id }}">{{ user.username }}</option>
-                            </select>
+                            <input type="text" class="form-control" disabled value="{{ company.user_company }}">
                         </div>
                     </div>
 
                     <div class="row mt-2">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>Inicio Atividade</span>
-                            <input type="text" class="form-control" disabled value="{{ company.start_data }}">
+                            <input type="text" class="form-control" disabled value="{{ company.start_data|date:'d/m/Y' }}">
                         </div>
                         <div class="col-sm-3">
                             <span>CNPJ</span>
                             <input type="text" class="form-control" disabled value="{{ company.cnpj }}">
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>Insc.Est.</span>
                             <input type="text" class="form-control" disabled value="{{ company.insc_est }}">
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>Insc.Mun.</span>
                             <input type="text" class="form-control" disabled value="{{ company.insc_mun }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Tipo Empresa</span>
+                            <input type="text" class="form-control" disabled value="{{ company.type_company }}">
                         </div>
                     </div>
 

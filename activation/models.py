@@ -1,12 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Company(models.Model):
+    choices_type_company = (    ('MEI', 'MicroEmpreendedor Individual'),
+                                ('ME', 'Microempresa'),
+                                ('EPP', 'Empresa de Pequeno Porte'))
+    choices_status = (  ('A', 'Ativo'),
+                        ('I', 'Inativo'))
+    type_company = models.CharField(max_length=3, choices=choices_type_company, default="MEI")
+    status = models.CharField(max_length=1, choices=choices_status, default="A")
+                            
     token_company = models.CharField(max_length=20)
     name = models.CharField(max_length=100)
     full_name = models.CharField(max_length=250)
 
-    start_data = models.DateTimeField()
+    start_data = models.DateField()
     cnpj = models.CharField(max_length=20, blank=True)
     insc_est = models.CharField(max_length=20, blank=True)
     insc_mun = models.CharField(max_length=20, blank=True)
