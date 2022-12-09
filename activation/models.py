@@ -41,8 +41,8 @@ class Company(models.Model):
 
     user_company = models.ForeignKey(User, blank=True, on_delete=models.DO_NOTHING)
 
-def __str__(self):
-    return self.name
+    def __str__(self):
+        return self.name
 
 
 class TokenUser(models.Model):
