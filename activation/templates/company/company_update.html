@@ -23,9 +23,6 @@
                     {% csrf_token %}
 
                     <div class="row mt-2">
-                        <div>
-                            <input type="hidden" class="form-control" name="id" value="{{ company.id }}">
-                        </div>
                         <div class="col-sm-2">
                             <span>Token *</span>
                             <input type="text" class="form-control" name="token_company" value="{{ company.token_company }}">
@@ -48,7 +45,7 @@
                         </div>
                         <div class="col-sm-2">
                             <span>Usuário</span>
-                            <select class="form-control" name="user_company">     
+                            <select disabled class="form-control" name="user_company">     
                                 <option value="{{ company.user_company_id }}">{{ company.user_company }}</option>                           
                                 {% for user in users %} 
                                     <option value="{{ user.id }}">{{ user.username }}</option> 
@@ -58,11 +55,15 @@
                     </div>
 
                     <div class="row mt-2">
+                        <div class="col-sm-1">
+                            <span>ID</span>
+                            <input type="text" value="{{ company.id }}" class="form-control" disabled name="id">
+                        </div>
                         <div class="col-sm-2">
                             <span>Inicio Atividade</span>
-                            <input type="text" class="form-control" disabled name="start_data" value="{{ company.start_data|date:'d/m/Y' }}">
+                            <input type="date" class="form-control" disabled name="start_data" value="{{ company.start_data|date:'Y-m-d' }}">
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>CNPJ</span>
                             <input type="text" class="form-control" name="cnpj" value="{{ company.cnpj }}">
                         </div>

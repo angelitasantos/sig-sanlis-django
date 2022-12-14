@@ -11,7 +11,7 @@ import os
 from .utils import password_is_valid, fields_empty, email_html
 from .models import TokenUser, Company
 from hashlib import sha256
-import datetime
+from datetime import date
 
 
 sig = 'SIG SANLIS | '
@@ -134,14 +134,16 @@ def active_account(request, token):
 def companies(request):
     title = sig + 'Listar Empresas'
     name_filtrar = request.GET.get('name')
-    companies = Company.objects.all()
+    companies = Company.objects.filter(user_company=request.user)
     users = User.objects.all()
+    user_login = User.objects.filter(username=request.user)
 
     if name_filtrar:
         companies = companies.filter(name__icontains = name_filtrar)
 
     context =   {   'title': title,
                     'users': users,
+                    'user_login': user_login[0],
                     'companies': companies}
     return render(request, 'company/company_list.html', context)
 
@@ -239,10 +241,17 @@ def company_create(request):
 @login_required(login_url='/auth/login/')
 def company_view(request, id):
     title = sig + 'Visualizar Empresa'
+
+    companies_exists = Company.objects.filter(id=id)
+    if not companies_exists.exists():
+        messages.add_message(request, constants.ERROR, 'Não existe uma empresa com este identificador !!!')
+        return redirect('/auth/empresas')
+
     users = User.objects.all()
     company = get_object_or_404(Company, id=id)
     companies = Company.objects.all()
-    return render(request, 'company/company_view.html', {   'title': title,
+
+    return render(request, 'company/company_update.html', { 'title': title,
                                                             'users': users,
                                                             'company': company,
                                                             'companies': companies})
@@ -251,92 +260,103 @@ def company_view(request, id):
 @login_required(login_url='/auth/login/')
 def company_update(request, id):
     title = sig + 'Alterar Empresa'
+
+    token_company = request.POST.get('token_company')
+    name = request.POST.get('name')
+    full_name = request.POST.get('full_name')
+
+    start_data = Company.objects.filter(id=id).values('start_data')
+    print(start_data)
+    cnpj = request.POST.get('cnpj')
+    insc_est = request.POST.get('insc_est')
+    insc_mun = request.POST.get('insc_mun')
+
+    street = request.POST.get('street')
+    number1 = request.POST.get('number')
+    number = 0 if number1 == "" else request.POST.get('number')
+    complement = request.POST.get('complement')
+    district = request.POST.get('district')
+    city = request.POST.get('city')
+    state = request.POST.get('state')
+    zipcode = request.POST.get('zipcode')
+    google_maps_link = request.POST.get('google_maps_link')
+
+    email = request.POST.get('email')
+    phone = request.POST.get('phone')
+    whatsapp_number = request.POST.get('whatsapp_number')
+    whatsapp_link = request.POST.get('whatsapp_link')
+
+    site_link = request.POST.get('site_link')
+    instagram_link = request.POST.get('instagram_link')
+    linkedin_link = request.POST.get('linkedin_link')
+    facebook_link = request.POST.get('facebook_link')
+
+    status = request.POST.get('status')
+    user_company = request.POST.get('user_company')
+    type_company = request.POST.get('type_company')
+
+    company_exists = Company.objects.filter(id=id)
+    if not company_exists.exists():
+        messages.add_message(request, constants.ERROR, 'Não existe uma empresa com este identificador !!!')
+        return redirect('/auth/empresas')
+
     users = User.objects.all()
-    company = get_object_or_404(Company, id=id)
-    companies = Company.objects.get(id=id)
-    
-    if request.method == "GET":
-        return render(request, 'company/company_update.html', { 'title': title,
-                                                                'users': users,
-                                                                'company': company,
-                                                                'companies': companies})
-    elif request.method == "POST":
-        id = request.POST.get('id')
-        token_company = request.POST.get('token_company')
-        name = request.POST.get('name')
-        full_name = request.POST.get('full_name')
+    company = Company.objects.get(id=id)
+    companies = Company.objects.filter(id=id)
+    context =   {   'title': title,
+                    'users': users,
+                    'company': company,
+                    'companies': companies}
 
-        start_data = datetime.date.today()
-        cnpj = request.POST.get('cnpj')
-        insc_est = request.POST.get('insc_est')
-        insc_mun = request.POST.get('insc_mun')
+    if (len(token_company.strip()) == 0) or (len(name.strip()) == 0) or (len(full_name.strip()) == 0):
+        messages.add_message(request, constants.ERROR, 'Preencha todos os campos !!!')
+        return render(request, 'company/company_update.html', context)
 
-        street = request.POST.get('street')
-        number1 = request.POST.get('number')
-        number = 0 if number1 == "" else request.POST.get('number')
-        complement = request.POST.get('complement')
-        district = request.POST.get('district')
-        city = request.POST.get('city')
-        state = request.POST.get('state')
-        zipcode = request.POST.get('zipcode')
-        google_maps_link = request.POST.get('google_maps_link')
+    if companies.exists():
+        try:    
+            company.token_company = token_company
+            company.name = name
+            company.full_name = full_name
 
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        whatsapp_number = request.POST.get('whatsapp_number')
-        whatsapp_link = request.POST.get('whatsapp_link')
+            company.start_data = start_data
+            company.cnpj = cnpj
+            company.insc_est = insc_est
+            company.insc_mun = insc_mun
 
-        site_link = request.POST.get('site_link')
-        instagram_link = request.POST.get('instagram_link')
-        linkedin_link = request.POST.get('linkedin_link')
-        facebook_link = request.POST.get('facebook_link')
+            company.street = street
 
-        status = request.POST.get('status')
-        user_company = request.POST.get('user_company')
-        type_company = request.POST.get('type_company')
+            number1 = number
+            number = 0 if number1 == "" else number
+            company.number = number
 
-        companies = Company.objects.filter(id=id)
+            company.complement = complement
+            company.district = district
+            company.city = city
+            company.state = state
+            company.zipcode = zipcode
+            company.google_maps_link = google_maps_link
 
-        try:
-            company = Company(  id=id,
-                                token_company=token_company,
-                                name=name,
-                                full_name=full_name,
+            company.email = email
+            company.phone = phone
+            company.whatsapp_number = whatsapp_number
+            company.whatsapp_link = whatsapp_link
 
-                                start_data=start_data,
-                                cnpj=cnpj,
-                                insc_est=insc_est,
-                                insc_mun=insc_mun,
+            company.site_link = site_link
+            company.instagram_link = instagram_link
+            company.linkedin_link = linkedin_link
+            company.facebook_link = facebook_link
 
-                                street=street,
-                                number=number,
-                                complement=complement,
-                                district=district,
-                                city=city,
-                                state=state,
-                                zipcode=zipcode,
-                                google_maps_link=google_maps_link,
+            company.status = status
+            #company.user_company = user_company
+            company.type_company = type_company
 
-                                email=email,
-                                phone=phone,
-                                whatsapp_number=whatsapp_number,
-                                whatsapp_link=whatsapp_link,
-
-                                site_link=site_link,
-                                instagram_link=instagram_link,
-                                linkedin_link=linkedin_link,
-                                facebook_link=facebook_link,
-
-                                status=status,
-                                type_company=type_company,
-                                user_company_id=user_company)
             company.save()
 
-            messages.add_message(request, constants.SUCCESS, 'Empresa Alterada com Sucesso !!!')
-            return redirect(f'/auth/visualizar_empresa/{id}')
+            messages.add_message(request, constants.SUCCESS, 'Alteração Efetuada com Sucesso!')
+            return redirect('/auth/empresas')
         except:
             messages.add_message(request, constants.ERROR, 'Erro Interno do Sistema!!!')
-            return redirect(f'/auth/alterar_empresa/{id}')
+            return redirect('/auth/empresas')
 
 
 @login_required(login_url='/auth/login/')
