@@ -11,7 +11,6 @@ import os
 from .utils import password_is_valid, fields_empty, email_html
 from .models import TokenUser, Company
 from hashlib import sha256
-from datetime import date
 
 
 sig = 'SIG SANLIS | '
@@ -134,17 +133,29 @@ def active_account(request, token):
 def companies(request):
     title = sig + 'Listar Empresas'
     name_filtrar = request.GET.get('name')
-    companies = Company.objects.filter(user_company=request.user)
     users = User.objects.all()
     user_login = User.objects.filter(username=request.user)
+    user_super = User.objects.filter(is_superuser=1, username=request.user)
 
     if name_filtrar:
         companies = companies.filter(name__icontains = name_filtrar)
+    
+    if user_super.exists():
+        companies = Company.objects.all()
+        context =   {   'title': title,
+                        'users': users,
+                        'user_login': user_login[0],
+                        'companies': companies}
+        render(request, 'company/company_list.html', context)
 
-    context =   {   'title': title,
-                    'users': users,
-                    'user_login': user_login[0],
-                    'companies': companies}
+    else:
+        companies = Company.objects.filter(user_company=request.user)
+        context =   {   'title': title,
+                        'users': users,
+                        'user_login': user_login[0],
+                        'companies': companies}
+        render(request, 'company/company_list.html', context)
+
     return render(request, 'company/company_list.html', context)
 
 
@@ -266,7 +277,6 @@ def company_update(request, id):
     full_name = request.POST.get('full_name')
 
     start_data = Company.objects.filter(id=id).values('start_data')
-    print(start_data)
     cnpj = request.POST.get('cnpj')
     insc_est = request.POST.get('insc_est')
     insc_mun = request.POST.get('insc_mun')
