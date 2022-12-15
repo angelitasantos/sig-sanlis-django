@@ -162,8 +162,10 @@ def companies(request):
 @login_required(login_url='/auth/login/')
 def company_create(request):
     title = sig + 'Criar Empresa'
+    user_login = User.objects.filter(username=request.user)
     users = User.objects.all()
     context =   {   'title': title,
+                    'user_login': user_login[0],
                     'users': users}
     if request.method == "GET":
         return render(request, 'company/company_create.html', context)
@@ -252,10 +254,11 @@ def company_create(request):
 @login_required(login_url='/auth/login/')
 def company_view(request, id):
     title = sig + 'Visualizar Empresa'
+    user_login = User.objects.filter(username=request.user)
 
     companies_exists = Company.objects.filter(id=id)
     if not companies_exists.exists():
-        messages.add_message(request, constants.ERROR, 'Não existe uma empresa com este identificador !!!')
+        messages.add_message(request, constants.ERROR, 'Você não tem acesso a este identificador !!!')
         return redirect('/auth/empresas')
 
     users = User.objects.all()
@@ -264,6 +267,7 @@ def company_view(request, id):
 
     return render(request, 'company/company_update.html', { 'title': title,
                                                             'users': users,
+                                                            'user_login': user_login[0],
                                                             'company': company,
                                                             'companies': companies})
 
@@ -307,7 +311,7 @@ def company_update(request, id):
 
     company_exists = Company.objects.filter(id=id)
     if not company_exists.exists():
-        messages.add_message(request, constants.ERROR, 'Não existe uma empresa com este identificador !!!')
+        messages.add_message(request, constants.ERROR, 'Você não tem acesso a este identificador !!!')
         return redirect('/auth/empresas')
 
     users = User.objects.all()
