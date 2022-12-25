@@ -105,7 +105,7 @@ def login(request):
             return redirect('/auth/login')
         else:
             auth.login(request, user_auth)
-            return redirect('/auth/empresas')
+            return redirect('/painel')
 
 
 @login_required(login_url='/auth/login/')
@@ -132,16 +132,17 @@ def active_account(request, token):
 @login_required(login_url='/auth/login/')
 def companies(request):
     title = sig + 'Listar Empresas'
-    name_filtrar = request.GET.get('name')
+
     users = User.objects.all()
     user_login = User.objects.filter(username=request.user)
     user_super = User.objects.filter(is_superuser=1, username=request.user)
-
-    if name_filtrar:
-        companies = companies.filter(name__icontains = name_filtrar)
     
     if user_super.exists():
+        name_filtrar = request.GET.get('name')
         companies = Company.objects.all()
+
+        if name_filtrar:
+            companies = companies.filter(name__icontains = name_filtrar)
         context =   {   'title': title,
                         'users': users,
                         'user_login': user_login[0],
@@ -149,7 +150,12 @@ def companies(request):
         render(request, 'company/company_list.html', context)
 
     else:
+        name_filtrar = request.GET.get('name')
         companies = Company.objects.filter(user_company=request.user)
+
+        if name_filtrar:
+            companies = companies.filter(name__icontains = name_filtrar)
+            
         context =   {   'title': title,
                         'users': users,
                         'user_login': user_login[0],
