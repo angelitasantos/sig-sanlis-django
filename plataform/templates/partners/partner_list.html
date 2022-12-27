@@ -45,14 +45,16 @@
             <thead class="">
                 <tr>
                     <th>Apelido</th>
+                    <th>Registros</th>
+                    <th>Em Aberto</th>
                     <th>Phone1</th>
                     <th>Phone2</th>
                     <th>Documento</th>
                     <th>Nome</th>
                     <th>Sobrenome</th>
                     <th>Email</th>
-                    <th>Ordens</th>
-                    <th>Excluir</th>
+                    <th>Editar</th>
+                    <th>Deletar</th>
                 </tr>
             </thead>
 
@@ -60,14 +62,20 @@
                 {% for partner in partners %}
                 <tr class="tabela-linha">
                     <td><a href="{% url 'partner_view' partner.id %}">{{ partner.nickname }}</a></td>
+                    <td>
+                        <img src="">
+                    </td>
+                    <td>
+                        <img src="">
+                    </td>
                     <td>{{ partner.phone1 }}</td>
                     <td>{{ partner.phone2 }}</td>
                     <td>{{ partner.document }}</td>
                     <td>{{ partner.first_name }}</td>
                     <td>{{ partner.last_name }}</td>
                     <td>{{ partner.email }}</td>
-                    <td>
-                        <img src="">
+                    <td><a class="btn-sm btn-warning" href="{% url 'partner_view' partner.id %}">
+                        <i class="fa fa-edit"></i></a>
                     </td>
                     <td><a class="btn-sm btn-danger" href="{% url 'partner_delete' partner.id %}"
                         onclick="return confirm('Você tem certeza que deseja excluir este parceito ?')">
