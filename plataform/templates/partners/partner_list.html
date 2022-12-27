@@ -1,0 +1,86 @@
+{% extends 'company/base.html' %}
+{% load static %}
+{% block 'title' %} {{ title }} {% endblock %}
+
+{% block 'container %}
+
+<main class="container-fluid py-3">
+
+    {% include 'breadcrumb.html' %}
+
+    {% include 'messages.html' %}
+
+    <section class="row">
+
+        <div class="col-md-9">
+            <h2 class="text-success">Gerenciar Parceiros</h2>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{% url 'partner_create' %}">
+                <button class="btn-success px-5 mb-2">Novo Parceiro</button></a>
+        </div>
+
+    </section>
+
+    <section class="body-box">
+
+        <form action="{% url 'partners' %}" method="GET">
+            {% csrf_token %}
+            <div class="row">
+                
+                <section class="col-md-5 mb-2">
+                    <input type="text" placeholder="Buscar pelo Apelido" class="form-control" name="nickname">
+                </section>
+                
+                <section class="col-md-2">
+                    <input type="submit" value="FILTRAR" class="btn btn-success px-5">
+                </section>
+
+            </div>
+        </form>
+
+        <table class="table table-sm table-responsive-sm table-hover mt-2">
+
+            <thead class="">
+                <tr>
+                    <th>Apelido</th>
+                    <th>Phone1</th>
+                    <th>Phone2</th>
+                    <th>Documento</th>
+                    <th>Nome</th>
+                    <th>Sobrenome</th>
+                    <th>Email</th>
+                    <th>Ordens</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+
+            <tbody class="table-group-divider">
+                {% for partner in partners %}
+                <tr class="tabela-linha">
+                    <td><a href="{% url 'partner_view' partner.id %}">{{ partner.nickname }}</a></td>
+                    <td>{{ partner.phone1 }}</td>
+                    <td>{{ partner.phone2 }}</td>
+                    <td>{{ partner.document }}</td>
+                    <td>{{ partner.first_name }}</td>
+                    <td>{{ partner.last_name }}</td>
+                    <td>{{ partner.email }}</td>
+                    <td>
+                        <img src="">
+                    </td>
+                    <td><a class="btn-sm btn-danger" href="{% url 'partner_delete' partner.id %}"
+                        onclick="return confirm('Você tem certeza que deseja excluir este parceito ?')">
+                        <i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+        
+    </section>
+
+</main>
+
+{% endblock %}
