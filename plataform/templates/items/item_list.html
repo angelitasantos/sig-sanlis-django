@@ -1,0 +1,95 @@
+{% extends 'company/base.html' %}
+{% load static %}
+{% block 'title' %} {{ title }} {% endblock %}
+
+{% block 'container %}
+
+<main class="container-fluid py-3">
+
+    {% include 'breadcrumb.html' %}
+
+    {% include 'messages.html' %}
+
+    <section class="row">
+
+        <div class="col-md-9">
+            <h2 class="text-success">Gerenciar Itens</h2>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{% url 'item_create' %}">
+                <button class="btn-success px-5 mb-2">Novo Item</button></a>
+        </div>
+
+    </section>
+
+    <section class="body-box">
+
+        <form action="{% url 'items' %}" method="GET">
+            {% csrf_token %}
+            <div class="row">
+                
+                <section class="col-md-5 mb-2">
+                    <input type="text" placeholder="Buscar pelo Nome" class="form-control" name="title">
+                </section>
+
+                <section class="col-md-3">
+                    <select class="form-control" name="categories">
+                        <option value="">Escolha uma Categoria</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </section>
+                
+                <section class="col-md-2">
+                    <input type="submit" value="FILTRAR" class="btn btn-success px-5">
+                </section>
+
+            </div>
+        </form>
+
+        <table class="table table-sm table-responsive-sm table-hover mt-2">
+
+            <thead class="">
+                <tr>
+                    <th>Nome</th>
+                    <th>Estoque</th>
+                    <th>UnMed</th>
+                    <th>Ref</th>
+                    <th>Localização</th>
+                    <th>Categoria</th>
+                    <th>Editar</th>
+                    <th>Deletar</th>
+                </tr>
+            </thead>
+
+            <tbody class="table-group-divider">
+                {% for item in items %}
+                <tr class="tabela-linha">
+                    <td><a href="{% url 'item_view' item.id %}">{{ item.title }}</a></td>
+                    <td>
+                        <img src="">
+                    </td>
+                    <td>{{ item.un_med.description }}</td>
+                    <td>{{ item.reference }}</td>
+                    <td>{{ item.location }}</td>
+                    <td>{{ item.category }}</td>
+                    <td><a class="btn-sm btn-warning" href="{% url 'item_view' item.id %}">
+                        <i class="fa fa-edit"></i></a>
+                    </td>
+                    <td><a class="btn-sm btn-danger" href="{% url 'item_delete' item.id %}"
+                        onclick="return confirm('Você tem certeza que deseja excluir este item ?')">
+                        <i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+        
+    </section>
+
+</main>
+
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends 'company/base.html' %}
+{% load static %}
+{% block 'title' %} {{ title }} {% endblock %}
+
+{% block 'container %}
+
+<main class="container-fluid py-3">
+
+    {% include 'breadcrumb.html' %}
+
+    <div class="container-fluid mb-5">
+
+        <section class="text-center mb-3">
+            <h3 class="text-success">Alterar Item</h3>
+            {% include 'messages.html' %}
+        </section>
+        
+        <section class="row">
+
+            <div class="col-md-12 border border-success py-2">
+
+                <form action="{% url 'item_update' item.id %}" method="POST">
+                    {% csrf_token %}
+
+                    <input type="hidden" class="form-control" name="company" value="{{ company_id_value }}">
+
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <span>ID</span>
+                            <input type="text" value="{{ item.id }}" class="form-control" disabled name="id">
+                        </div>
+                        <div class="col-sm-5">
+                            <span>Nome*:</span>
+                            <input type="text" value="{{ item.title }}" class="form-control" name="title">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Referencia:</span>
+                            <input type="text" value="{{ item.reference }}" class="form-control" name="reference">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Local:</span>
+                            <input type="text" value="{{ item.location }}" class="form-control" name="location">
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Un Med:</span>
+                            <select name="un_med" class="form-control">                              
+                                <option value="{{ item.un_med_id }}">
+                                    {{ item.un_med.description }}
+                                </option>
+                                <option disabled value=""> . Escolha outra Unid</option>
+                                {% for un_med in un_meds %}
+                                    <option value="{{ un_med.id }}">{{ un_med }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <span>Tipo Item:</span>
+                            <select name="type_item" class="form-control">
+                                <option value="{{ item.type_item }}">{{ item.get_type_item_display }}</option>
+                                <option disabled value=""> >>> Escolha outra Opção</option>
+                                <option value="S">Serviço</option>
+                                <option value="P">Produto</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <span>Controla Estoque:</span>
+                            <select name="stock_control" class="form-control">
+                                {% if item.stock_control == False %}
+                                    <option value="0">Não</option>
+                                {% else %}
+                                    <option value="1">Sim</option>
+                                {% endif %}
+                                <option disabled value=""> . Escolha outra Opção</option>
+                                <option value="0">Não</option>
+                                <option value="1">Sim</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Saldo Inicial:</span>
+                            <input type="text" value="{{ item.open_balance }}" class="form-control" name="open_balance">
+                        </div>
+                        <div class="col-sm-4">
+                            <span>Category:</span>
+                            <select name="category" class="form-control">
+                                <option value="{{ item.category_id }}">
+                                    {{ item.category }}
+                                </option>
+                                <option disabled value=""> >>> Escolha outra Categoria</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <span>Custo:</span>
+                            <input type="text" value="{{ item.custom }}" class="form-control" name="custom">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Preço A Vista:</span>
+                            <input type="text" value="{{ item.price_in_cash }}" class="form-control" name="price_in_cash">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Preço A Prazo:</span>
+                            <input type="text" value="{{ item.price_term }}" class="form-control" name="price_term">
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Preço Promoção:</span>
+                            <input type="text" value="{{ item.price_promotion }}" class="form-control" name="price_promotion">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-2">
+                            <span>Status</span>
+                            <select class="form-control" name="status">
+                                <option value="{{ item.status }}">{{ item.get_status_display }}</option>
+                                <option disabled value=""> . Escolha outra Opção</option>                     
+                                <option value="A">Ativo</option>
+                                <option value="I">Inativo</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-10">
+                            <span>Descrição:</span>
+                            <input type="text" value="{{ item.description }}" class="form-control" name="description">
+                        </div>
+                    </div>
+                
+                    <div class="row my-3">
+                        <div class="col-sm-10">
+                            <h6>* Nome não pode fica vazio.</h6>
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="submit" class="btn btn-success btn-sm px-5" value="Alterar">
+                        </div>
+                    </div>
+                    
+                </form>
+
+            </div>
+            
+        </section>
+    </div>
+    
+</main>
+
+{% endblock%}

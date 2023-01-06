@@ -15,9 +15,13 @@
 
     {% if user.is_authenticated %}
      <nav class="navbar navbar-dark bg-dark">
-      <a class="navbar-brand" href="{% url 'home' %}">SANLIS</a>
+      <div class="form-inline">
+        <a class="btn btn-outline-success btn-sm mx-2" href="{% url 'dashboard' %}">
+          <i class="fa fa-home"></i></a>
+        <a class="navbar-brand" href="{% url 'home' %}">SANLIS</a>
+      </div>
       <form class="form-inline">
-        <span class="text-light px-3">Usuário Logado: {{ user_login }}</span>
+        <span class="text-light px-3">Usuário: {{ user_login }}</span>
         <a href="{% url 'logout' %}"
           onclick="return confirm('Você tem certeza que deseja sair do painel?')"
           class="btn btn-outline-success btn-sm mr-2">Logout

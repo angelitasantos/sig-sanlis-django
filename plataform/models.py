@@ -33,3 +33,51 @@ class Partner(models.Model):
 
     def __str__(self):
         return self.nickname
+
+
+class Category(models.Model):
+    category = models.CharField(max_length=30)
+    markup = models.FloatField(null=True)
+    commission = models.FloatField(null=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.category
+
+
+class UnMed(models.Model):
+    un_med = models.CharField(max_length=5)
+    description = models.CharField(max_length=30)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.un_med
+
+
+class Item(models.Model):
+    choices_status = (  ('A', 'Ativo'),
+                        ('I', 'Inativo'))
+    choices_type_item = (   ('S', 'Serviço'),
+                            ('P', 'Produto'))
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=250, null=True)
+    location = models.CharField(max_length=20)
+    reference = models.CharField(max_length=20)
+
+    open_balance = models.FloatField(null=True)
+    price_in_cash = models.FloatField(null=True)
+    price_term = models.FloatField(null=True)
+    price_promotion = models.FloatField(null=True)
+    custom = models.FloatField(null=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    stock_control = models.BooleanField()
+    status = models.CharField(max_length=1, choices=choices_status, default="A")
+    type_item = models.CharField(max_length=1, choices=choices_type_item, default="S")
+    un_med = models.ForeignKey(UnMed, on_delete=models.CASCADE, null=True, blank=True, default=None)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True, default=None)
+
+    def __str__(self):
+        return self.title
