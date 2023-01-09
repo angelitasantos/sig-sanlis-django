@@ -1,4 +1,6 @@
 from django.db import models
+from home.models import TimeStampedModel
+
 from activation.models import Company
 from django.utils import timezone
 
@@ -7,6 +9,9 @@ class PartnerGroup(models.Model):
     group = models.CharField(max_length=30)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ('group',)
+
     def __str__(self):
         return self.group
 
@@ -14,6 +19,9 @@ class PartnerGroup(models.Model):
 class PartnerSubGroup(models.Model):
     subgroup = models.CharField(max_length=30)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('subgroup',)
 
     def __str__(self):
         return self.subgroup
@@ -76,12 +84,13 @@ class Partner(models.Model):
     group = models.ForeignKey(PartnerGroup, on_delete=models.CASCADE, null=True, blank=True, default=None)
     subgroup = models.ForeignKey(PartnerSubGroup, on_delete=models.CASCADE, null=True, blank=True, default=None)
     
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     type_partners = models.CharField(max_length=1, choices=choices_type_partners, default="1")
     type_person = models.CharField(max_length=1, choices=choices_type_person, default="J")
     gender = models.CharField(max_length=1, choices=choices_gender, default="M")
     status = models.CharField(max_length=1, choices=choices_status, default="A")
+
+    class Meta:
+        ordering = ('nickname',)
 
     def __str__(self):
         return self.nickname
@@ -93,6 +102,9 @@ class Category(models.Model):
     commission = models.FloatField(null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ('category',)
+
     def __str__(self):
         return self.category
 
@@ -101,6 +113,9 @@ class UnMed(models.Model):
     un_med = models.CharField(max_length=5)
     description = models.CharField(max_length=30)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('description',)
 
     def __str__(self):
         return self.un_med
@@ -123,13 +138,14 @@ class Item(models.Model):
     custom = models.FloatField(null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     stock_control = models.BooleanField()
     status = models.CharField(max_length=1, choices=choices_status, default="A")
     type_item = models.CharField(max_length=1, choices=choices_type_item, default="S")
     un_med = models.ForeignKey(UnMed, on_delete=models.CASCADE, null=True, blank=True, default=None)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True, default=None)
+
+    class Meta:
+        ordering = ('title',)
 
     def __str__(self):
         return self.title
