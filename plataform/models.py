@@ -1,5 +1,22 @@
 from django.db import models
 from activation.models import Company
+from django.utils import timezone
+
+
+class PartnerGroup(models.Model):
+    group = models.CharField(max_length=30)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.group
+
+
+class PartnerSubGroup(models.Model):
+    subgroup = models.CharField(max_length=30)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.subgroup
 
 
 class Partner(models.Model):
@@ -23,6 +40,41 @@ class Partner(models.Model):
     phone1 = models.CharField(max_length=20, null=True)
     phone2 = models.CharField(max_length=20, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    address = models.CharField(max_length=100, null=True)
+    number = models.CharField(max_length=10, null=True)
+    compl = models.CharField(max_length=20, null=True)
+    district = models.CharField(max_length=50, null=True)
+    city = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=30, null=True)
+    country = models.CharField(max_length=30, null=True)
+    zipcode = models.CharField(max_length=20, null=True)
+
+    cnpj = models.CharField(max_length=30, null=True)
+    insc_est = models.CharField(max_length=30, null=True)
+    insc_mun = models.CharField(max_length=30, null=True)
+    rg = models.CharField(max_length=30, null=True)
+    cpf = models.CharField(max_length=30, null=True)
+    tit_eleitor = models.CharField(max_length=30, null=True)
+    zona = models.CharField(max_length=10, null=True)
+    secao = models.CharField(max_length=10, null=True)
+    ctps = models.CharField(max_length=30, null=True)
+    pis = models.CharField(max_length=30, null=True)
+    cert_reservista = models.CharField(max_length=30, null=True)
+    cnh = models.CharField(max_length=30, null=True)
+
+    data_nasc = models.DateField(default=timezone.now)
+    data_admissao = models.DateField(default=timezone.now)
+    data_demissao = models.DateField(default=timezone.now)
+
+    banco = models.CharField(max_length=30, null=True)
+    agencia = models.CharField(max_length=30, null=True)
+    tipo_conta = models.CharField(max_length=30, null=True)
+    conta = models.CharField(max_length=30, null=True)
+    pix = models.CharField(max_length=30, null=True)
+
+    group = models.ForeignKey(PartnerGroup, on_delete=models.CASCADE, null=True, blank=True, default=None)
+    subgroup = models.ForeignKey(PartnerSubGroup, on_delete=models.CASCADE, null=True, blank=True, default=None)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

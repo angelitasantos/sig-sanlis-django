@@ -41,6 +41,7 @@
                             <span>Status:</span>
                             <select name="status" class="form-control">
                                 <option value="{{ partner.status }}">{{ partner.get_status_display }}</option>
+                                <option disabled value=""> . Escolha uma Opção</option>
                                 <option value="A">Ativo</option>
                                 <option value="I">Inativo</option>
                             </select>
@@ -81,6 +82,7 @@
                             <span>Tipo Parceiro:</span>
                             <select name="type_partners" class="form-control">
                                 <option value="{{ partner.type_partners }}">{{ partner.get_type_partners_display }}</option>
+                                <option disabled value=""> . Escolha um Tipo</option>
                                 <option value="1">Cliente</option>
                                 <option value="2">Fornecedor</option>
                                 <option value="3">Transportadora</option>
@@ -92,6 +94,7 @@
                             <span>Tipo Pessoa:</span>
                             <select name="type_person" class="form-control">
                                 <option value="{{ partner.type_person }}">{{ partner.get_type_person_display }}</option>
+                                <option disabled value=""> . Escolha um Tipo</option>
                                 <option value="F">Física</option>
                                 <option value="J">Jurídica</option>
                             </select>
@@ -100,6 +103,7 @@
                             <span>Sexo:</span>
                             <select name="gender" class="form-control">
                                 <option value="{{ partner.gender }}">{{ partner.get_gender_display }}</option>
+                                <option disabled value=""> . Escolha uma Opção</option>
                                 <option value="M">Masculino</option>
                                 <option value="F">Feminino</option>
                             </select>
