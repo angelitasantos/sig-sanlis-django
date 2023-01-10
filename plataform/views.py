@@ -5,7 +5,7 @@ from django.contrib.messages import constants
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from activation.models import TokenUser, Company
-from .models import Partner, Category, UnMed, Item
+from .models import Partner, Category, UnMed, Item, Brand
 
 sig = 'SIG SANLIS | '
 
@@ -281,12 +281,14 @@ def item_create(request):
 
     categories = Category.objects.filter(company_id=company_id_value)
     un_meds = UnMed.objects.filter(company_id=company_id_value)
+    brands = Brand.objects.filter(company_id=company_id_value)
     
     context =   {   'title': title,
                     'user_login': user_login[0],
                     'company_id_value': company_id_value,
                     'categories': categories,
                     'un_meds': un_meds,
+                    'brands': brands,
                     'users': users}
     if request.method == "GET":
         return render(request, 'items/item_create.html', context)
@@ -296,11 +298,8 @@ def item_create(request):
         location = request.POST.get('location')
         reference = request.POST.get('reference')
 
-        open_balance1 = request.POST.get('open_balance')
-        open_balance = 0 if open_balance1 == "" else request.POST.get('open_balance').replace(',', '.')
-
-        custom1 = request.POST.get('custom')
-        custom = 0 if custom1 == "" else request.POST.get('custom').replace(',', '.')
+        stock_qtd1 = request.POST.get('stock_qtd')
+        stock_qtd = 0 if stock_qtd1 == "" else request.POST.get('stock_qtd').replace(',', '.')
 
         price_in_cash1 = request.POST.get('price_in_cash')
         price_in_cash = 0 if price_in_cash1 == "" else request.POST.get('price_in_cash').replace(',', '.')
@@ -311,11 +310,15 @@ def item_create(request):
         price_promotion1 = request.POST.get('price_promotion')
         price_promotion = 0 if price_promotion1 == "" else request.POST.get('price_promotion').replace(',', '.')
 
+        price_custom1 = request.POST.get('price_custom')
+        price_custom = 0 if price_custom1 == "" else request.POST.get('price_custom').replace(',', '.')
+
         company_id = request.POST.get('company')
         stock_control = request.POST.get('stock_control')
         type_item = request.POST.get('type_item')
         un_med_id = request.POST.get('un_med')
         category_id = request.POST.get('category')
+        brand_id = request.POST.get('brand')
         status = "A"
 
         if (len(title.strip()) == 0):
@@ -332,8 +335,8 @@ def item_create(request):
                         location=location,
                         reference=reference,
 
-                        open_balance=open_balance,
-                        custom=custom,
+                        stock_qtd=stock_qtd,
+                        price_custom=price_custom,
                         price_in_cash=price_in_cash,
                         price_term=price_term,
                         price_promotion=price_promotion,
@@ -343,6 +346,7 @@ def item_create(request):
                         type_item=type_item,
                         un_med_id=un_med_id,
                         category_id=category_id,
+                        brand_id=brand_id,
                         status=status
                         )
         item.save()
@@ -371,6 +375,7 @@ def item_view(request, id):
 
     categories = Category.objects.filter(company_id=company_id_value)
     un_meds = UnMed.objects.filter(company_id=company_id_value)
+    brands = Brand.objects.filter(company_id=company_id_value)
 
     return render(request, 'items/item_update.html', { 'title': title,
                                                         'users': users,
@@ -378,6 +383,7 @@ def item_view(request, id):
                                                         'company_id_value': company_id_value,
                                                         'categories': categories,
                                                         'un_meds': un_meds,
+                                                        'brands': brands,
                                                         'item': item,
                                                         'items': items})
 
@@ -391,11 +397,11 @@ def item_update(request, id):
     location = request.POST.get('location')
     reference = request.POST.get('reference')
 
-    open_balance1 = request.POST.get('open_balance')
-    open_balance = 0 if open_balance1 == "" else request.POST.get('open_balance').replace(',', '.')
+    stock_qtd1 = request.POST.get('stock_qtd')
+    stock_qtd = 0 if stock_qtd1 == "" else request.POST.get('stock_qtd').replace(',', '.')
 
-    custom1 = request.POST.get('custom')
-    custom = 0 if custom1 == "" else request.POST.get('custom').replace(',', '.')
+    price_custom1 = request.POST.get('price_custom')
+    price_custom = 0 if price_custom1 == "" else request.POST.get('price_custom').replace(',', '.')
 
     price_in_cash1 = request.POST.get('price_in_cash')
     price_in_cash = 0 if price_in_cash1 == "" else request.POST.get('price_in_cash').replace(',', '.')
@@ -411,6 +417,7 @@ def item_update(request, id):
     type_item = request.POST.get('type_item')
     un_med_id = request.POST.get('un_med')
     category_id = request.POST.get('category')
+    brand_id = request.POST.get('brand')
     status = request.POST.get('status')
 
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
@@ -445,8 +452,8 @@ def item_update(request, id):
             item.location = location
             item.reference = reference
 
-            item.open_balance = open_balance
-            item.custom = custom
+            item.stock_qtd = stock_qtd
+            item.price_custom = price_custom
             item.price_in_cash = price_in_cash
             item.price_term = price_term
             item.price_promotion = price_promotion
@@ -456,14 +463,13 @@ def item_update(request, id):
             item.type_item = type_item
             item.un_med_id = un_med_id
             item.category_id = category_id
+            item.brand_id = brand_id
             item.status = status
 
             item.save()
 
             messages.add_message(request, constants.SUCCESS, 'Alteração Efetuada com Sucesso!')
             return redirect('/painel/itens')
-        
-
     return render(request, 'itens/item_list.html')
 
 

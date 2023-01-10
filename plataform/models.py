@@ -27,7 +27,7 @@ class PartnerSubGroup(models.Model):
         return self.subgroup
 
 
-class Partner(models.Model):
+class Partner(TimeStampedModel):
     choices_type_partners = (   ('1', 'Cliente'),
                                 ('2', 'Fornecedor'),
                                 ('3', 'Transportadora'),
@@ -121,28 +121,70 @@ class UnMed(models.Model):
         return self.un_med
 
 
-class Item(models.Model):
+class Brand(models.Model):
+    brand = models.CharField(max_length=30)
+    markup = models.FloatField(null=True)
+    commission = models.FloatField(null=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('brand',)
+
+    def __str__(self):
+        return self.brand
+
+
+class Item(TimeStampedModel):
     choices_status = (  ('A', 'Ativo'),
                         ('I', 'Inativo'))
     choices_type_item = (   ('S', 'Serviço'),
                             ('P', 'Produto'))
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=250, null=True)
-    location = models.CharField(max_length=20)
-    reference = models.CharField(max_length=20)
+    location = models.CharField(max_length=20, null=True)
+    reference = models.CharField(max_length=20, null=True)
 
-    open_balance = models.FloatField(null=True)
     price_in_cash = models.FloatField(null=True)
     price_term = models.FloatField(null=True)
     price_promotion = models.FloatField(null=True)
-    custom = models.FloatField(null=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    price_custom = models.FloatField(null=True)
 
+    stock_qtd = models.FloatField(null=True)
     stock_control = models.BooleanField()
+
+    stock_min = models.FloatField(null=True)
+    stock_max = models.FloatField(null=True)
+    stock_seg = models.FloatField(null=True)
+    lot_min = models.FloatField(null=True)
+    lot_mult = models.FloatField(null=True)
+    lead_time = models.FloatField(null=True)
+
+    code_ean = models.CharField(max_length=20, null=True)
+    code_dun = models.CharField(max_length=20, null=True)
+    code_fab = models.CharField(max_length=20, null=True)
+
+    length = models.FloatField(null=True)
+    height = models.FloatField(null=True)
+    width = models.FloatField(null=True)
+    weight_gross = models.FloatField(null=True)
+    weight_net = models.FloatField(null=True)
+
+    pack_master = models.FloatField(null=True)
+    pack_sale = models.FloatField(null=True)
+
+    ncm = models.CharField(max_length=20, null=True)
+    cst = models.CharField(max_length=20, null=True)
+
+    color = models.CharField(max_length=20, null=True)
+    size = models.CharField(max_length=20, null=True)
+    material = models.CharField(max_length=20, null=True)
+
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
     status = models.CharField(max_length=1, choices=choices_status, default="A")
     type_item = models.CharField(max_length=1, choices=choices_type_item, default="S")
     un_med = models.ForeignKey(UnMed, on_delete=models.CASCADE, null=True, blank=True, default=None)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True, default=None)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, null=True, blank=True, default=None)
 
     class Meta:
         ordering = ('title',)
