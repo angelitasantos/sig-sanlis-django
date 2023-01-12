@@ -114,8 +114,8 @@ class CategoryClass:
         for category in categories:
             data = dict(
                 category=category,
-                markup=random() * randint(1, 10),
-                commission=random() * randint(1, 10),
+                markup=randint(1, 50),
+                commission=randint(1, 10),
                 company_id=3,
             )
             obj = Category(**data)
@@ -166,8 +166,8 @@ class BrandClass:
         for brand in brands:
             data = dict(
                 brand=brand,
-                markup=random() * randint(1, 10),
-                commission=random() * randint(1, 10),
+                markup=randint(1, 30),
+                commission=randint(1, 10),
                 company_id=3,
             )
             obj = Brand(**data)
