@@ -17,7 +17,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="{% url 'partner_create' %}">
+            <a href="{% url 'plataform:partner_create' %}">
                 <button class="btn-success px-5 mb-2">Novo Parceiro</button></a>
         </div>
 
@@ -25,7 +25,7 @@
 
     <section class="body-box">
 
-        <form action="{% url 'partners' %}" method="GET">
+        <form action="{% url 'plataform:partners' %}" method="GET">
             {% csrf_token %}
             <div class="row">
                 
@@ -87,7 +87,7 @@
                             <i class="fa fa-minus-circle text-danger"></i>
                         {% endif %}
                     </td>
-                    <td><a href="{% url 'partner_view' partner.id %}">{{ partner.nickname }}</a></td>
+                    <td><a href="{% url 'plataform:partner_view' partner.id %}">{{ partner.nickname }}</a></td>
                     <td>
                         <img src="">
                     </td>
@@ -100,10 +100,10 @@
                     <td>{{ partner.first_name }}</td>
                     <td>{{ partner.last_name }}</td>
                     <td>{{ partner.email }}</td>
-                    <td><a class="btn-sm btn-warning" href="{% url 'partner_view' partner.id %}">
+                    <td><a class="btn-sm btn-warning" href="{% url 'plataform:partner_view' partner.id %}">
                         <i class="fa fa-edit"></i></a>
                     </td>
-                    <td><a class="btn-sm btn-danger" href="{% url 'partner_delete' partner.id %}"
+                    <td><a class="btn-sm btn-danger" href="{% url 'plataform:partner_delete' partner.id %}"
                         onclick="return confirm('Você tem certeza que deseja excluir este parceito ?')">
                         <i class="fa fa-trash"></i></a>
                     </td>
