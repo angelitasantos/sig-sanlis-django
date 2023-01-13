@@ -44,6 +44,7 @@
 
             <thead class="">
                 <tr>
+                    <th>Status</th>
                     <th>Apelido</th>
                     <th>Registros</th>
                     <th>Em Aberto</th>
@@ -61,6 +62,13 @@
             <tbody class="table-group-divider">
                 {% for partner in partners %}
                 <tr class="tabela-linha">
+                    <td>
+                        {% if partner.status == 'A' %}
+                            <i class="fa fa-check-circle text-success"></i>
+                        {% else %}
+                            <i class="fa fa-minus-circle text-danger"></i>
+                        {% endif %}
+                    </td>
                     <td><a href="{% url 'partner_view' partner.id %}">{{ partner.nickname }}</a></td>
                     <td>
                         <img src="">

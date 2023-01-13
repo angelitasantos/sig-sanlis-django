@@ -65,7 +65,7 @@
                     </div>  
 
                     <div class="row mt-2">
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <span>Tipo Parceiro:</span>
                             <select name="type_partners" class="form-control">
                                 <option value="1">Cliente</option>
@@ -75,18 +75,36 @@
                                 <option value="5">Funcionário</option>
                             </select>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <span>Tipo Pessoa:</span>
                             <select name="type_person" class="form-control">
                                 <option value="F">Física</option>
                                 <option value="J">Jurídica</option>
                             </select>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <span>Sexo:</span>
                             <select name="gender" class="form-control">
                                 <option value="M">Masculino</option>
                                 <option value="F">Feminino</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Grupo:</span>
+                            <select name="group" class="form-control">
+                                <option value="">Sem Grupo</option> 
+                                {% for group in groups %}
+                                    <option value="{{ group.id }}">{{ group.group }}</option> 
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <span>SubGrupo:</span>
+                            <select name="subgroup" class="form-control">
+                                <option value="">Sem SubGrupo</option> 
+                                {% for subgroup in subgroups %}
+                                    <option value="{{ subgroup.id }}">{{ subgroup.subgroup }}</option> 
+                                {% endfor %}
                             </select>
                         </div>
                     </div>

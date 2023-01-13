@@ -78,7 +78,7 @@
                     </div>  
 
                     <div class="row mt-2">
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <span>Tipo Parceiro:</span>
                             <select name="type_partners" class="form-control">
                                 <option value="{{ partner.type_partners }}">{{ partner.get_type_partners_display }}</option>
@@ -90,7 +90,7 @@
                                 <option value="5">Funcionário</option>
                             </select>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <span>Tipo Pessoa:</span>
                             <select name="type_person" class="form-control">
                                 <option value="{{ partner.type_person }}">{{ partner.get_type_person_display }}</option>
@@ -99,13 +99,45 @@
                                 <option value="J">Jurídica</option>
                             </select>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <span>Sexo:</span>
                             <select name="gender" class="form-control">
                                 <option value="{{ partner.gender }}">{{ partner.get_gender_display }}</option>
                                 <option disabled value=""> . Escolha uma Opção</option>
                                 <option value="M">Masculino</option>
                                 <option value="F">Feminino</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <span>Grupo:</span>
+                            <select name="group" class="form-control">
+                                {% if partner.group_id == None %}
+                                    <option value="">Sem Grupo</option>
+                                {% else %}
+                                    <option value="{{ partner.group_id }}">
+                                        {{ partner.group }}
+                                    </option>
+                                {% endif %}
+                                <option disabled value=""> >>> Escolha um Grupo</option>
+                                {% for group in groups %}
+                                    <option value="{{ group.id }}">{{ group }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <span>SubGrupo:</span>
+                            <select name="subgroup" class="form-control">
+                                {% if partner.subgroup_id == None %}
+                                    <option value="">Sem SubGrupo</option>
+                                {% else %}
+                                    <option value="{{ partner.subgroup_id }}">
+                                        {{ partner.subgroup }}
+                                    </option>
+                                {% endif %}
+                                <option disabled value=""> >>> Escolha um SubGrupo</option>
+                                {% for subgroup in subgroups %}
+                                    <option value="{{ subgroup.id }}">{{ subgroup }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
