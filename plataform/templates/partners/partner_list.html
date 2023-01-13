@@ -32,6 +32,24 @@
                 <section class="col-md-5 mb-2">
                     <input type="text" placeholder="Buscar pelo Apelido" class="form-control" name="nickname">
                 </section>
+
+                <section class="col-md-3">
+                    <select class="form-control" name="groups">
+                        <option value="">Escolha Grupo</option>
+                        {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group }}</option>
+                        {% endfor %}
+                    </select>
+                </section>
+
+                <section class="col-md-2">
+                    <select class="form-control" name="subgroups">
+                        <option value="">Escolha SubGrupo</option>
+                        {% for subgroup in subgroups %}
+                        <option value="{{ subgroup.id }}">{{ subgroup }}</option>
+                        {% endfor %}
+                    </select>
+                </section>
                 
                 <section class="col-md-2">
                     <input type="submit" value="FILTRAR" class="btn btn-success px-5">

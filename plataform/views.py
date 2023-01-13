@@ -39,9 +39,22 @@ def partners(request):
         if nickname_filtrar:
             partners = partners.filter(nickname__icontains = nickname_filtrar)
 
+        groups_filtrar = request.GET.get('groups')
+        if groups_filtrar:
+            partners = partners.filter(group = groups_filtrar)
+
+        subgroups_filtrar = request.GET.get('subgroups')
+        if subgroups_filtrar:
+            partners = partners.filter(subgroup = subgroups_filtrar)
+
+        groups = PartnerGroup.objects.filter(company_id=company_id_value)
+        subgroups = PartnerSubGroup.objects.filter(company_id=company_id_value)
+
         context =   {   'title': title,
                         'users': users,
                         'partners': partners,
+                        'groups': groups,
+                        'subgroups': subgroups,
                         'user_login': user_login[0]}
         render(request, 'partners/partner_list.html', context)
 
