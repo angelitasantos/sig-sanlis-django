@@ -5,7 +5,7 @@ from django.contrib.messages import constants
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from activation.models import TokenUser, Company
-from .models import Partner, Category, UnMed, Item, Brand
+from .models import PartnerGroup, PartnerSubGroup, Partner, Category, UnMed, Item, Brand
 
 sig = 'SIG SANLIS | '
 
@@ -64,10 +64,15 @@ def partner_create(request):
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
     company_id_value = user_token_company_id[0][0]
+
+    groups = PartnerGroup.objects.filter(company_id=company_id_value)
+    subgroups = PartnerSubGroup.objects.filter(company_id=company_id_value)
     
     context =   {   'title': title,
                     'user_login': user_login[0],
                     'company_id_value': company_id_value,
+                    'groups': groups,
+                    'subgroups': subgroups,
                     'users': users}
     if request.method == "GET":
         return render(request, 'partners/partner_create.html', context)
@@ -84,6 +89,8 @@ def partner_create(request):
         type_partners = request.POST.get('type_partners')
         type_person = request.POST.get('type_person')
         gender = request.POST.get('gender')
+        group_id = request.POST.get('group')
+        subgroup_id = request.POST.get('subgroup')
         status = "A"
 
         if (len(nickname.strip()) == 0):
@@ -109,6 +116,8 @@ def partner_create(request):
                             type_partners=type_partners,
                             type_person=type_person,
                             gender=gender,
+                            group_id=group_id,
+                            subgroup_id=subgroup_id,
                             status=status
                             )
         partner.save()
@@ -126,6 +135,9 @@ def partner_view(request, id):
     user_token_company_id = user_token_company.values_list('company_id')
     company_id_value = user_token_company_id[0][0]
 
+    groups = PartnerGroup.objects.filter(company_id=company_id_value)
+    subgroups = PartnerSubGroup.objects.filter(company_id=company_id_value)
+
     partners_exists = Partner.objects.filter(id=id, company_id=company_id_value)
     if not partners_exists.exists():
         messages.add_message(request, constants.ERROR, 'Você não tem acesso a este identificador !!!')
@@ -139,6 +151,8 @@ def partner_view(request, id):
                                                             'users': users,
                                                             'user_login': user_login[0],
                                                             'company_id_value': company_id_value,
+                                                            'groups': groups,
+                                                            'subgroups': subgroups,
                                                             'partner': partner,
                                                             'partners': partners})
 
@@ -159,11 +173,16 @@ def partner_update(request, id):
     type_partners = request.POST.get('type_partners')
     type_person = request.POST.get('type_person')
     gender = request.POST.get('gender')
+    group_id = request.POST.get('group')
+    subgroup_id = request.POST.get('subgroup')
     status = request.POST.get('status')
 
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
     company_id_value = user_token_company_id[0][0]
+
+    groups = PartnerGroup.objects.filter(company_id=company_id_value)
+    subgroups = PartnerSubGroup.objects.filter(company_id=company_id_value)
 
     partners_exists = Partner.objects.filter(id=id, company_id=company_id_value)
     if not partners_exists.exists():
@@ -175,6 +194,8 @@ def partner_update(request, id):
     partners = Partner.objects.filter(id=id)
     context =   {   'title': title,
                     'users': users,
+                    'groups': groups,
+                    'subgroups': subgroups,
                     'partner': partner,
                     'partners': partners}
 
@@ -196,6 +217,8 @@ def partner_update(request, id):
             partner.type_partners = type_partners
             partner.type_person = type_person
             partner.gender = gender
+            partner.group_id = group_id
+            partner.subgroup_id = subgroup_id
             partner.status = status
 
             partner.save()
@@ -245,8 +268,13 @@ def items(request):
         if categories_filtrar:
             items = items.filter(category = categories_filtrar)
 
+        brands_filtrar = request.GET.get('brands')
+        if brands_filtrar:
+            items = items.filter(brand = brands_filtrar)
+
         categories = Category.objects.filter(company_id=company_id_value)
         un_meds = UnMed.objects.filter(company_id=company_id_value)
+        brands = Brand.objects.filter(company_id=company_id_value)
         
         if title_filtrar:
             items = items.filter(title__icontains = title_filtrar)
@@ -256,6 +284,7 @@ def items(request):
                         'items': items,
                         'categories': categories,
                         'un_meds': un_meds,
+                        'brands': brands,
                         'user_login': user_login[0]}
         render(request, 'items/item_list.html', context)
 
@@ -431,6 +460,7 @@ def item_update(request, id):
 
     categories = Category.objects.filter(company_id=company_id_value)
     un_meds = UnMed.objects.filter(company_id=company_id_value)
+    brands = Brand.objects.filter(company_id=company_id_value)
     
     users = User.objects.all()
     item = Item.objects.get(id=id)
@@ -439,6 +469,7 @@ def item_update(request, id):
                     'users': users,
                     'categories': categories,
                     'un_meds': un_meds,
+                    'brands': brands,
                     'item': item,
                     'items': items}
 

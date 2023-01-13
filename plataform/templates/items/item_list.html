@@ -41,8 +41,17 @@
                         {% endfor %}
                     </select>
                 </section>
-                
+
                 <section class="col-md-2">
+                    <select class="form-control" name="brands">
+                        <option value="">Escolha uma Marca</option>
+                        {% for brand in brands %}
+                        <option value="{{ brand.id }}">{{ brand }}</option>
+                        {% endfor %}
+                    </select>
+                </section>
+                
+                <section class="col-md-1">
                     <input type="submit" value="FILTRAR" class="btn btn-success px-5">
                 </section>
 
@@ -53,32 +62,40 @@
 
             <thead class="">
                 <tr>
+                    <th>Status</th>
                     <th>Nome</th>
-                    <th>Estoque</th>
-                    <th>UnMed</th>
-                    <th>Ref</th>
-                    <th>Localização</th>
-                    <th>Categoria</th>
-                    <th>Editar</th>
-                    <th>Deletar</th>
+                    <th class="text-right">Estoque</th>
+                    <th class="text-center">UnMed</th>
+                    <th class="text-center">Ref</th>
+                    <th class="text-center">Localização</th>
+                    <th class="text-right">Preço</th>
+                    <th class="text-right">Custo</th>
+                    <th class="text-center">Editar</th>
+                    <th class="text-center">Deletar</th>
                 </tr>
             </thead>
 
             <tbody class="table-group-divider">
                 {% for item in items %}
                 <tr class="tabela-linha">
-                    <td><a href="{% url 'item_view' item.id %}">{{ item.title }}</a></td>
                     <td>
-                        <img src="">
+                        {% if item.status == 'A' %}
+                            <i class="fa fa-check-circle text-success"></i>
+                        {% else %}
+                            <i class="fa fa-minus-circle text-danger"></i>
+                        {% endif %}
                     </td>
-                    <td>{{ item.un_med.description }}</td>
-                    <td>{{ item.reference }}</td>
-                    <td>{{ item.location }}</td>
-                    <td>{{ item.category }}</td>
-                    <td><a class="btn-sm btn-warning" href="{% url 'item_view' item.id %}">
+                    <td><a href="{% url 'item_view' item.id %}">{{ item.title }}</a></td>
+                    <td class="text-right">{{ item.stock_qtd|floatformat:3 }}</td>
+                    <td class="text-center">{{ item.un_med.description }}</td>
+                    <td class="text-center">{{ item.reference }}</td>
+                    <td class="text-center">{{ item.location }}</td>
+                    <td class="text-right">{{ item.price_term|floatformat:2 }}</td>
+                    <td class="text-right">{{ item.price_custom|floatformat:2 }}</td>
+                    <td class="text-center"><a class="btn-sm btn-warning" href="{% url 'item_view' item.id %}">
                         <i class="fa fa-edit"></i></a>
                     </td>
-                    <td><a class="btn-sm btn-danger" href="{% url 'item_delete' item.id %}"
+                    <td class="text-center"><a class="btn-sm btn-danger" href="{% url 'item_delete' item.id %}"
                         onclick="return confirm('Você tem certeza que deseja excluir este item ?')">
                         <i class="fa fa-trash"></i></a>
                     </td>

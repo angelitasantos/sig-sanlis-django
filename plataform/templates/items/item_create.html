@@ -49,11 +49,15 @@
                     </div>
 
                     <div class="row mt-2">
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <span>Tipo Item:</span>
                             <select name="type_item" class="form-control">
-                                <option value="S">Serviço</option>
-                                <option value="P">Produto</option>
+                                <option value="1">Produto para Revenda</option>
+                                <option value="2">Produção Própria</option>
+                                <option value="3">Serviço Prestado</option>
+                                <option value="4">Matéria-Prima</option>
+                                <option value="5">Consumo e Utilização</option>
+                                <option value="6">Ativo Patrimonial</option>
                             </select>
                         </div>
                         <div class="col-sm-2">
@@ -68,7 +72,7 @@
                             <input type="number" step="0.01" placeholder=""
                                 class="form-control" name="stock_qtd">
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>Custo:</span>
                             <input type="number" step="0.01" placeholder=""
                                 class="form-control" name="price_custom">
@@ -85,22 +89,22 @@
                     </div>
 
                     <div class="row mt-2">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>Preço A Vista:</span>
                             <input type="number" step="0.01" placeholder=""
                                 class="form-control" name="price_in_cash">
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>Preço A Prazo:</span>
                             <input type="number" step="0.01" placeholder=""
                                 class="form-control" name="price_term">
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span>Preço Promoção:</span>
                             <input type="number" step="0.01" placeholder="" 
                                 class="form-control" name="price_promotion">
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <span>Category:</span>
                             <select name="category" class="form-control">
                                 <option value="">Sem Categoria</option> 

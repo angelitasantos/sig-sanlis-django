@@ -137,8 +137,12 @@ class Brand(models.Model):
 class Item(TimeStampedModel):
     choices_status = (  ('A', 'Ativo'),
                         ('I', 'Inativo'))
-    choices_type_item = (   ('S', 'Serviço'),
-                            ('P', 'Produto'))
+    choices_type_item = (   ('1', 'Produto para Revenda'),
+                            ('2', 'Produção Própria'),
+                            ('3', 'Serviço Prestado'),
+                            ('4', 'Matéria-Prima'),
+                            ('5', 'Consumo e Utilização'),
+                            ('6', 'Ativo Patrimonial'))
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=250, null=True)
     location = models.CharField(max_length=20, null=True)
