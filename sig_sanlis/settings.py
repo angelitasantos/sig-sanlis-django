@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'home',
     'activation',
     'plataform',
-    'transactions',
 ]
 
 MIDDLEWARE = [

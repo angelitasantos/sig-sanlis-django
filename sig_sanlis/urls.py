@@ -6,5 +6,4 @@ urlpatterns = [
     path('auth/', include('activation.urls')),
     path('', include('home.urls')),
     path('painel/', include('plataform.urls')),
-    path('registros/', include('transactions.urls')),
 ]
