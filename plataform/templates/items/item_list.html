@@ -12,13 +12,16 @@
 
     <section class="row">
 
-        <div class="col-md-9">
+        <div class="col-md-10">
             <h2 class="text-success">Gerenciar Itens</h2>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
             <a href="{% url 'plataform:item_create' %}">
-                <button class="btn-success px-5 mb-2">Novo Item</button></a>
+                <button type="button" class="btn btn-success btn-sm px-5">
+                    <span class="fa fa-plus"></span> Adicionar
+                </button>
+            </a>
         </div>
 
     </section>
@@ -33,7 +36,7 @@
                     <input type="text" placeholder="Buscar pelo Nome" class="form-control" name="title">
                 </section>
 
-                <section class="col-md-3">
+                <section class="col-md-2">
                     <select class="form-control" name="categories">
                         <option value="">Escolha uma Categoria</option>
                         {% for category in categories %}
@@ -52,7 +55,7 @@
                 </section>
                 
                 <section class="col-md-1">
-                    <input type="submit" value="FILTRAR" class="btn btn-success px-5">
+                    <input type="submit" value="FILTRAR" class="btn btn-outline-success px-5">
                 </section>
 
             </div>

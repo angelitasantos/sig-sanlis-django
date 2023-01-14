@@ -12,13 +12,16 @@
 
     <section class="row">
 
-        <div class="col-md-9">
+        <div class="col-md-10">
             <h2 class="text-success">Gerenciar Parceiros</h2>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
             <a href="{% url 'plataform:partner_create' %}">
-                <button class="btn-success px-5 mb-2">Novo Parceiro</button></a>
+                <button type="button" class="btn btn-success btn-sm px-5">
+                    <span class="fa fa-plus"></span> Adicionar
+                </button>
+            </a>
         </div>
 
     </section>
@@ -33,7 +36,7 @@
                     <input type="text" placeholder="Buscar pelo Apelido" class="form-control" name="nickname">
                 </section>
 
-                <section class="col-md-3">
+                <section class="col-md-2">
                     <select class="form-control" name="groups">
                         <option value="">Escolha Grupo</option>
                         {% for group in groups %}
@@ -52,7 +55,7 @@
                 </section>
                 
                 <section class="col-md-2">
-                    <input type="submit" value="FILTRAR" class="btn btn-success px-5">
+                    <input type="submit" value="FILTRAR" class="btn btn-outline-success px-5">
                 </section>
 
             </div>
