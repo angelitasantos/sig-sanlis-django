@@ -10,3 +10,6 @@
 - pip install django
 - pip install pillow
 - pip install python-dotenv
+
+
+![imagem_ilustrativa](python-django.png)
