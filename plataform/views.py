@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.messages import constants
 from django.contrib.auth.models import User
@@ -573,3 +573,11 @@ def category_create(request):
         return render(request, 'items/item_create.html', context)
     elif request.method == "POST":
         return render(request, 'items/item_create.html', context)
+
+
+# Ajax para Saldo
+def produto_json(request, pk):
+    ''' Retorna o produto, id e estoque. '''
+    produto = Item.objects.filter(pk=pk)
+    data = [item.to_dict_json() for item in produto]
+    return JsonResponse({'data': data})

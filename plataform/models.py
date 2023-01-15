@@ -195,3 +195,11 @@ class Item(TimeStampedModel):
 
     def __str__(self):
         return self.title
+    
+    # Ajax para Saldo
+    def to_dict_json(self):
+        return {
+            'pk': self.pk,
+            'produto': self.title,
+            'estoque': self.stock_qtd,
+        }

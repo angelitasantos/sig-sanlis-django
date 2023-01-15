@@ -18,6 +18,9 @@ items_patterns = [
     path('visualizar_item/<int:id>', views.item_view, name="item_view"),
     path('alterar_item/<int:id>', views.item_update, name="item_update"),
     path('excluir_item/<int:id>', views.item_delete, name="item_delete"),
+    
+    # Ajax para Saldo
+    path('<int:pk>/json/', views.produto_json, name='produto_json'),
 
     path('nova_un_med/', views.un_med_create, name='un_med_create'),
     path('nova_categoria/', views.category_create, name='category_create'),
