@@ -2,7 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse_lazy
 from home.models import TimeStampedModel
-from plataform.models import Item
+from activation.models import Company
+from plataform.models import Partner, Item
 from .managers import   (
                             StockSaleManager, 
                             StockServiceManager,
@@ -27,19 +28,37 @@ TIPO_MOVIMENTO = (
 
 
 class Estoque(TimeStampedModel):
-    funcionario = models.ForeignKey(User, on_delete=models.CASCADE)
+    choices_tipo_registro = (   ('1', 'Não Autorizado'),
+                                ('2', 'Pedido'),
+                                ('3', 'Troca'),
+                                ('4', 'Devolução'),
+                                ('5', 'Garantia'),
+                                ('6', 'Consignado'))
+    choices_status = (  ('1', 'Não Iniciado'),
+                        ('2', 'Em Aberto'),
+                        ('3', 'Finalizado'))
+    tipo_registro = models.CharField(max_length=1, choices=choices_tipo_registro, default="2")
+    status = models.CharField(max_length=1, choices=choices_status, default="2")
+
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True)
+    partner = models.ForeignKey(Partner, on_delete=models.CASCADE)
+    funcionario = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
     nf = models.PositiveIntegerField('nota fiscal', null=True, blank=True)
-    movimento = models.CharField(max_length=1, choices=MOVIMENTO)
-    tipo_movimento = models.CharField(max_length=1, choices=TIPO_MOVIMENTO)
+    movimento = models.CharField(max_length=1, choices=MOVIMENTO, blank=True)
+    tipo_movimento = models.CharField(max_length=1, choices=TIPO_MOVIMENTO, blank=True)
 
     class Meta:
         ordering = ('-created',)
 
     def __str__(self):
-        return '{} - {} - {}'.format(self.pk, self.nf, self.created.strftime('%d-%m-%Y'))
+        if self.nf:
+            return '{} - {} - {}'.format(self.pk, self.nf, self.created.strftime('%d-%m-%Y'))
+        return '{} --- {}'.format(self.pk, self.created.strftime('%d-%m-%Y'))
     
     def nf_formated(self):
-        return str(self.nf).zfill(3)
+        if self.nf:
+            return str(self.nf).zfill(3)
+        return '---'
 
 
 class StockSale(Estoque):

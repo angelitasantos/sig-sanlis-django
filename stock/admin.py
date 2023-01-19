@@ -17,7 +17,7 @@ class EstoqueItensInline(admin.TabularInline):
 @admin.register(StockSale)
 class StockSaleAdmin(admin.ModelAdmin):
     inlines = (EstoqueItensInline,)
-    list_display = ('__str__', 'nf', 'funcionario',)
+    list_display = ('__str__', 'nf', 'funcionario', 'company_id')
     search_fields = ('nf',)
     list_filter = ('funcionario',)
     date_hierarchy = 'created'

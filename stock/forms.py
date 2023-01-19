@@ -7,7 +7,7 @@ class EstoqueForm(forms.ModelForm):
 
     class Meta:
         model = Estoque
-        fields = '__all__'
+        fields = ('tipo_registro', 'status', 'partner', 'nf', 'company')
 
 
 class EstoqueItensEntradaForm(forms.ModelForm):
