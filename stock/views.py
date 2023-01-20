@@ -23,34 +23,34 @@ sig = 'SIG SANLIS | '
 
 #######################################################
 @login_required(login_url='/auth/login/')
+def stock_list(request, template_name, objects, url, title, subtitle):
+    objects = objects
+    context =   {
+                    'title': title,
+                    'subtitle': subtitle,
+                    'object_list': objects
+                }
+    return render(request, template_name, context)
+    
+
+@login_required(login_url='/auth/login/')
 def stock_sale_list(request):
     title = sig + 'Vendas'
     subtitle = 'Vendas'
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
-    
-    if user_token_company.exists():
-        template_name = 'stock_sale_list.html'
-        objects = StockSale.objects.filter(company_id=company_id_value)
-        context =   {
-                        'title': title,
-                        'subtitle': subtitle,
-                        'users': users,
-                        'user_login': user_login[0],
-                        'object_list': objects
-                    }
-        return render(request, template_name, context)
-    
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
-        return redirect('/painel/')
+    template_name = 'stock_list.html'
 
+    user = User.objects.filter(username=request.user).values('id')
+    user_token_company = TokenUser.objects.filter(user_id=user[0]['id']).values('company_id')
+    company_id = user_token_company[0]['company_id']
+    
+    objects = StockSale.objects.filter(company_id=company_id)
+    context =   {
+                    'title': title,
+                    'subtitle': subtitle,
+                    'user_login': request.user,
+                    'url_add': 'stock:stock_sale_add',
+                     'object_list': objects
+                }
     return render(request, template_name, context)
 
 
@@ -58,95 +58,62 @@ def stock_sale_list(request):
 def stock_service_list(request):
     title = sig + 'Serviços'
     subtitle = 'Serviços'
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
-    
-    if user_token_company.exists():
-        template_name = 'stock_service_list.html'
-        objects = StockService.objects.filter(company_id=company_id_value)
-        context =   {
-                        'title': title,
-                        'subtitle': subtitle,
-                        'users': users,
-                        'user_login': user_login[0],
-                        'object_list': objects
-                    }
-        return render(request, template_name, context)
-    
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
-        return redirect('/painel/')
+    template_name = 'stock_list.html'
 
+    user = User.objects.filter(username=request.user).values('id')
+    user_token_company = TokenUser.objects.filter(user_id=user[0]['id']).values('company_id')
+    company_id = user_token_company[0]['company_id']
+
+    objects = StockService.objects.filter(company_id=company_id)
+    context =   {
+                    'title': title,
+                    'subtitle': subtitle,
+                    'user_login': request.user,
+                    'url_add': 'stock:stock_service_add',
+                    'object_list': objects
+                }
     return render(request, template_name, context)
-
+    
 
 @login_required(login_url='/auth/login/')
 def stock_shopping_list(request):
     title = sig + 'Compras'
     subtitle = 'Compras'
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
-    
-    if user_token_company.exists():
-        template_name = 'stock_shopping_list.html'
-        objects = StockShopping.objects.filter(company_id=company_id_value)
-        context =   {
-                        'title': title,
-                        'subtitle': subtitle,
-                        'users': users,
-                        'user_login': user_login[0],
-                        'object_list': objects
-                    }
-        return render(request, template_name, context)
-    
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
-        return redirect('/painel/')
+    template_name = 'stock_list.html'
 
+    user = User.objects.filter(username=request.user).values('id')
+    user_token_company = TokenUser.objects.filter(user_id=user[0]['id']).values('company_id')
+    company_id = user_token_company[0]['company_id']
+
+    objects = StockShopping.objects.filter(company_id=company_id)
+    context =   {
+                    'title': title,
+                    'subtitle': subtitle,
+                    'url_add': 'stock:stock_shopping_add',
+                    'user_login': request.user,
+                    'object_list': objects
+                }
     return render(request, template_name, context)
-
+    
 
 @login_required(login_url='/auth/login/')
 def stock_production_list(request):
     title = sig + 'Produção'
     subtitle = 'Produção'
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
-    
-    if user_token_company.exists():
-        template_name = 'stock_production_list.html'
-        objects = StockProduction.objects.filter(company_id=company_id_value)
-        context =   {
-                        'title': title,
-                        'subtitle': subtitle,
-                        'users': users,
-                        'user_login': user_login[0],
-                        'object_list': objects
-                    }
-        return render(request, template_name, context)
-    
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
-        return redirect('/painel/')
+    template_name = 'stock_list.html'
 
+    user = User.objects.filter(username=request.user).values('id')
+    user_token_company = TokenUser.objects.filter(user_id=user[0]['id']).values('company_id')
+    company_id = user_token_company[0]['company_id']
+
+    objects = StockProduction.objects.filter(company_id=company_id)
+    context =   {
+                    'title': title,
+                    'subtitle': subtitle,
+                    'user_login': request.user,
+                    'url_add': 'stock:stock_production_add',
+                    'object_list': objects
+                }
     return render(request, template_name, context)
 
 
@@ -154,63 +121,50 @@ def stock_production_list(request):
 def stock_inventary_list(request):
     title = sig + 'Inventário'
     subtitle = 'Inventário'
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
-    
-    if user_token_company.exists():
-        template_name = 'stock_inventary_list.html'
-        objects = StockInventary.objects.filter(company_id=company_id_value)
-        context =   {
-                        'title': title,
-                        'subtitle': subtitle,
-                        'users': users,
-                        'user_login': user_login[0],
-                        'object_list': objects
-                    }
-        return render(request, template_name, context)
-    
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
-        return redirect('/painel/')
+    template_name = 'stock_list.html'
 
+    user = User.objects.filter(username=request.user).values('id')
+    user_token_company = TokenUser.objects.filter(user_id=user[0]['id']).values('company_id')
+    company_id = user_token_company[0]['company_id']
+
+    objects = StockInventary.objects.filter(company_id=company_id)
+    context =   {
+                    'title': title,
+                    'subtitle': subtitle,
+                    'user_login': request.user,
+                    'url_add': 'stock:stock_inventary_add',
+                    'object_list': objects
+                }
+    return render(request, template_name, context)
+    
+
+#######################################################
+
+@login_required(login_url='/auth/login/')
+def stock_detail(request, pk, obj, template_name, url, title, subtitle):
+    context =   {
+                    'title': title,
+                    'subtitle': subtitle,
+                    'user_login': request.user,
+                }
     return render(request, template_name, context)
 
 
-#######################################################
 @login_required(login_url='/auth/login/')
 def stock_sale_detail(request, pk):
     title = sig + 'Vendas'
     subtitle = 'Vendas'
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    
-    if user_token_company.exists():
-        template_name = 'stock_sale_detail.html'
-        obj = StockSale.objects.get(pk=pk)
-        context =   {
-                            'title': title,
-                            'subtitle': subtitle,
-                            'users': users,
-                            'user_login': user_login[0],
-                            'object': obj
-                        }
-        return render(request, template_name, context)
-
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
-        return redirect('/painel/')
-    
+    template_name = 'stock_detail.html'
+    url_list = 'stock:stock_sale_list'
+    obj = StockSale.objects.get(pk=pk)
+    context =   {
+                    'title': title,
+                    'subtitle': subtitle,
+                    'user_login': request.user,
+                    'url_list': url_list,
+                    'object': obj,
+                    'pk': pk
+                }
     return render(request, template_name, context)
 
 
@@ -218,30 +172,17 @@ def stock_sale_detail(request, pk):
 def stock_service_detail(request, pk):
     title = sig + 'Serviços'
     subtitle = 'Serviços'
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    
-    if user_token_company.exists():
-        template_name = 'stock_service_detail.html'
-        obj = StockService.objects.get(pk=pk)
-        context =   {
-                            'title': title,
-                            'subtitle': subtitle,
-                            'users': users,
-                            'user_login': user_login[0],
-                            'object': obj
-                        }
-        return render(request, template_name, context)
-
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
-        return redirect('/painel/')
-    
+    template_name = 'stock_detail.html'
+    url_list = 'stock:stock_service_list'
+    obj = StockService.objects.get(pk=pk)
+    context =   {
+                    'title': title,
+                    'subtitle': subtitle,
+                    'user_login': request.user,
+                    'url_list': url_list,
+                    'object': obj,
+                    'pk': pk
+                }
     return render(request, template_name, context)
 
 
@@ -249,30 +190,17 @@ def stock_service_detail(request, pk):
 def stock_shopping_detail(request, pk):
     title = sig + 'Compras'
     subtitle = 'Compras'
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    
-    if user_token_company.exists():
-        template_name = 'stock_shopping_detail.html'
-        obj = StockShopping.objects.get(pk=pk)
-        context =   {
-                            'title': title,
-                            'subtitle': subtitle,
-                            'users': users,
-                            'user_login': user_login[0],
-                            'object': obj
-                        }
-        return render(request, template_name, context)
-
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
-        return redirect('/painel/')
-    
+    template_name = 'stock_detail.html'
+    url_list = 'stock:stock_shopping_list'
+    obj = StockShopping.objects.get(pk=pk)
+    context =   {
+                    'title': title,
+                    'subtitle': subtitle,
+                    'user_login': request.user,
+                    'url_list': url_list,
+                    'object': obj,
+                    'pk': pk
+                }
     return render(request, template_name, context)
 
 
@@ -280,30 +208,17 @@ def stock_shopping_detail(request, pk):
 def stock_production_detail(request, pk):
     title = sig + 'Produção'
     subtitle = 'Produção'
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    
-    if user_token_company.exists():
-        template_name = 'stock_production_detail.html'
-        obj = StockProduction.objects.get(pk=pk)
-        context =   {
-                            'title': title,
-                            'subtitle': subtitle,
-                            'users': users,
-                            'user_login': user_login[0],
-                            'object': obj
-                        }
-        return render(request, template_name, context)
-
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
-        return redirect('/painel/')
-    
+    template_name = 'stock_detail.html'
+    url_list = 'stock:stock_production_list'
+    obj = StockProduction.objects.get(pk=pk)
+    context =   {
+                'title': title,
+                'subtitle': subtitle,
+                'user_login': request.user,
+                'url_list': url_list,
+                'object': obj,
+                'pk': pk
+            }
     return render(request, template_name, context)
 
 
@@ -311,36 +226,23 @@ def stock_production_detail(request, pk):
 def stock_inventary_detail(request, pk):
     title = sig + 'Inventário'
     subtitle = 'Inventário'
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    
-    if user_token_company.exists():
-        template_name = 'stock_inventary_detail.html'
-        obj = StockInventary.objects.get(pk=pk)
-        context =   {
-                            'title': title,
-                            'subtitle': subtitle,
-                            'users': users,
-                            'user_login': user_login[0],
-                            'object': obj
-                        }
-        return render(request, template_name, context)
-
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
-        return redirect('/painel/')
-    
+    template_name = 'stock_detail.html'
+    url_list = 'stock:stock_inventary_list'
+    obj = StockInventary.objects.get(pk=pk)
+    context =   {
+                'title': title,
+                'subtitle': subtitle,
+                'user_login': request.user,
+                'url_list': url_list,
+                'object': obj,
+                'pk': pk
+            }
     return render(request, template_name, context)
 
 
 #######################################################
 @login_required(login_url='/auth/login/')
-def stock_add(request, template_name, movimento, tipo_movimento, url, title, subtitle):
+def stock_add(request, template_name, movimento, tipo_movimento, url, form, title, subtitle):
     users = User.objects.all()
     user_login = User.objects.filter(username=request.user)
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
@@ -352,7 +254,7 @@ def stock_add(request, template_name, movimento, tipo_movimento, url, title, sub
         item_estoque_formset = inlineformset_factory(
             Estoque,    
             EstoqueItens,
-            form=EstoqueItensSaidaForm,
+            form=form,
             extra=0,
             min_num=1,
             validate_min=True,
@@ -379,6 +281,7 @@ def stock_add(request, template_name, movimento, tipo_movimento, url, title, sub
         context =   {
                         'form': form, 
                         'formset': formset,
+                        'user_login': request.user,
                         'title': title, 
                         'subtitle': subtitle,
                     }
@@ -387,7 +290,7 @@ def stock_add(request, template_name, movimento, tipo_movimento, url, title, sub
         messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
         context =   {   
                         'users': users,
-                        'user_login': user_login[0]
+                        'user_login': request.user
                     }
         return redirect('/painel/')
     
@@ -398,12 +301,13 @@ def stock_add(request, template_name, movimento, tipo_movimento, url, title, sub
 def stock_sale_add(request):
     title = sig + 'Vendas'
     subtitle = 'Vendas'
-    template_name = 'stock_sale_form.html'
+    template_name = 'stock_form_sale.html'
     url = 'stock:stock_sale_detail'
     movimento = 'S'
     tipo_movimento = 'V'
+    form=EstoqueItensSaidaForm
 
-    context = stock_add(request, template_name, movimento, tipo_movimento, url, title, subtitle)
+    context = stock_add(request, template_name, movimento, tipo_movimento, url, form, title, subtitle)
     if context.get('pk'):
         return HttpResponseRedirect(resolve_url(url, context.get('pk')))
     return render(request, template_name, context)
@@ -413,12 +317,13 @@ def stock_sale_add(request):
 def stock_service_add(request):
     title = sig + 'Serviços'
     subtitle = 'Serviços'
-    template_name = 'stock_service_form.html'
+    template_name = 'stock_form_service.html'
     url = 'stock:stock_service_detail'
     movimento = 'S'
     tipo_movimento = 'S'
+    form=EstoqueItensSaidaForm
 
-    context = stock_add(request, template_name, movimento, tipo_movimento, url, title, subtitle)
+    context = stock_add(request, template_name, movimento, tipo_movimento, url, form, title, subtitle)
     if context.get('pk'):
         return HttpResponseRedirect(resolve_url(url, context.get('pk')))
     return render(request, template_name, context)
@@ -428,12 +333,13 @@ def stock_service_add(request):
 def stock_shopping_add(request):
     title = sig + 'Compras'
     subtitle = 'Compras'
-    template_name = 'stock_shopping_form.html'
+    template_name = 'stock_form_shopping.html'
     url = 'stock:stock_shopping_detail'
     movimento = 'E'
     tipo_movimento = 'C'
+    form=EstoqueItensEntradaForm
 
-    context = stock_add(request, template_name, movimento, tipo_movimento, url, title, subtitle)
+    context = stock_add(request, template_name, movimento, tipo_movimento, url, form, title, subtitle)
     if context.get('pk'):
         return HttpResponseRedirect(resolve_url(url, context.get('pk')))
     return render(request, template_name, context)
@@ -443,12 +349,13 @@ def stock_shopping_add(request):
 def stock_production_add(request):
     title = sig + 'Produção'
     subtitle = 'Produção'
-    template_name = 'stock_production_form.html'
+    template_name = 'stock_form_production.html'
     url = 'stock:stock_production_detail'
     movimento = 'E'
     tipo_movimento = 'P'
+    form=EstoqueItensEntradaForm
 
-    context = stock_add(request, template_name, movimento, tipo_movimento, url, title, subtitle)
+    context = stock_add(request, template_name, movimento, tipo_movimento, url, form, title, subtitle)
     if context.get('pk'):
         return HttpResponseRedirect(resolve_url(url, context.get('pk')))
     return render(request, template_name, context)
@@ -458,17 +365,19 @@ def stock_production_add(request):
 def stock_inventary_add(request):
     title = sig + 'Inventário'
     subtitle = 'Inventário'
-    template_name = 'stock_inventary_form.html'
+    template_name = 'stock_form_inventary.html'
     url = 'stock:stock_inventary_detail'
     movimento = 'E'
     tipo_movimento = 'I'
+    form=EstoqueItensEntradaForm
 
-    context = stock_add(request, template_name, movimento, tipo_movimento, url, title, subtitle)
+    context = stock_add(request, template_name, movimento, tipo_movimento, url, form, title, subtitle)
     if context.get('pk'):
         return HttpResponseRedirect(resolve_url(url, context.get('pk')))
     return render(request, template_name, context)
 
 
+#######################################################
 def stock_moviment(form):
     # Pega os produtos a partir da instância do formulário (Estoque).
     produtos = form.estoques.all()
@@ -476,5 +385,3 @@ def stock_moviment(form):
         produto = Item.objects.get(pk=item.produto.pk)
         produto.stock_qtd = item.saldo
         produto.save()
-    print('Estoque atualizado com sucesso.')
-
