@@ -1,19 +1,32 @@
 {% extends 'company/base.html' %}
 {% load static %}
-{% block 'title' %} {{ title }} {% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
-{% block 'container %}
+{% block container %}
 
 <main class="container-fluid py-3">
 
     {% include 'breadcrumb.html' %}
 
-    <div class="container-fluid mb-5">
+    <section class="row my-2">
 
-        <section class="text-center mb-3">
+        <div class="col-md-10">
             <h3 class="text-success">Alterar Parceiro</h3>
-            {% include 'messages.html' %}
-        </section>
+        </div>
+
+        <div class="col-md-2">
+            <a href="{% url 'plataform:partners' %}">
+                <button type="button" class="btn btn-success btn-sm px-5">
+                    <span class="fa fa-arrow-left"></span> Voltar
+                </button>
+            </a>
+        </div>
+
+    </section>
+
+    <section class="container-fluid mb-3">
+
+        {% include 'messages.html' %}
         
         <section class="row">
 
@@ -22,7 +35,7 @@
                 <form action="{% url 'plataform:partner_update' partner.id %}" method="POST">
                     {% csrf_token %}
 
-                    <input type="hidden" placeholder="" class="form-control" name="company" value="{{ company_id_value }}">
+                    <input type="hidden" class="form-control" name="company" value="{{ company_id_value }}">
 
                     <div class="row">
                         <div class="col-sm-1">
@@ -30,15 +43,15 @@
                             <input type="text" value="{{ partner.id }}" class="form-control" disabled name="id">
                         </div>
                         <div class="col-sm-5">
-                            <span>Apelido*:</span>
+                            <span>Apelido *</span>
                             <input type="text" value="{{ partner.nickname }}" class="form-control" name="nickname">
                         </div>
                         <div class="col-sm-4">
-                            <span>Documento*:</span>
+                            <span>Documento *</span>
                             <input type="text" value="{{ partner.document }}" class="form-control" name="document">
                         </div>
                         <div class="col-sm-2">
-                            <span>Status:</span>
+                            <span>Status</span>
                             <select name="status" class="form-control">
                                 <option value="{{ partner.status }}">{{ partner.get_status_display }}</option>
                                 <option disabled value=""> . Escolha uma Opção</option>
@@ -50,36 +63,36 @@
 
                     <div class="row mt-2">
                         <div class="col-sm-6">
-                            <span>Nome:</span>
+                            <span>Nome</span>
                             <input type="text" value="{{ partner.first_name }}" class="form-control" name="first_name">
                         </div>
                         <div class="col-sm-6">
-                            <span>Sobrenome:</span>
+                            <span>Sobrenome</span>
                             <input type="text" value="{{ partner.last_name }}" class="form-control" name="last_name">
                         </div>
                     </div>
 
                     <div class="row mt-2">
                         <div class="col-sm-6">
-                            <span>Telefone 1:</span>
+                            <span>Telefone 1</span>
                             <input type="text" value="{{ partner.phone1 }}" class="form-control" name="phone1">
                         </div>
                         <div class="col-sm-6">
-                            <span>Telefone 2:</span>
+                            <span>Telefone 2</span>
                             <input type="text" value="{{ partner.phone2 }}" class="form-control" name="phone2">
                         </div>
                     </div>
 
                     <div class="row mt-2">
                         <div class="col-sm-12">
-                            <span class="mt-2">E-mail:</span>
+                            <span class="mt-2">E-mail</span>
                             <input type="email" value="{{ partner.email }}" class="form-control" name="email">
                         </div>
                     </div>  
 
                     <div class="row mt-2">
                         <div class="col-sm-2">
-                            <span>Tipo Parceiro:</span>
+                            <span>Tipo Parceiro</span>
                             <select name="type_partners" class="form-control">
                                 <option value="{{ partner.type_partners }}">{{ partner.get_type_partners_display }}</option>
                                 <option disabled value=""> . Escolha um Tipo</option>
@@ -91,7 +104,7 @@
                             </select>
                         </div>
                         <div class="col-sm-2">
-                            <span>Tipo Pessoa:</span>
+                            <span>Tipo Pessoa</span>
                             <select name="type_person" class="form-control">
                                 <option value="{{ partner.type_person }}">{{ partner.get_type_person_display }}</option>
                                 <option disabled value=""> . Escolha um Tipo</option>
@@ -100,7 +113,7 @@
                             </select>
                         </div>
                         <div class="col-sm-2">
-                            <span>Sexo:</span>
+                            <span>Sexo</span>
                             <select name="gender" class="form-control">
                                 <option value="{{ partner.gender }}">{{ partner.get_gender_display }}</option>
                                 <option disabled value=""> . Escolha uma Opção</option>
@@ -109,7 +122,7 @@
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <span>Grupo:</span>
+                            <span>Grupo</span>
                             <select name="group" class="form-control">
                                 {% if partner.group_id == None %}
                                     <option value="">Sem Grupo</option>
@@ -125,7 +138,7 @@
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <span>SubGrupo:</span>
+                            <span>SubGrupo</span>
                             <select name="subgroup" class="form-control">
                                 {% if partner.subgroup_id == None %}
                                     <option value="">Sem SubGrupo</option>
@@ -144,7 +157,7 @@
 
                     <div class="row my-3">
                         <div class="col-sm-10">
-                            <h6>* Apelido e Documento não podem ficar vazios.</h6>
+                            <h6>* Os campos Apelido e Documento não podem ficar vazios.</h6>
                         </div>
                         <div class="col-sm-2">
                             <input type="submit" class="btn btn-success btn-sm px-5" value="Alterar">
@@ -156,7 +169,8 @@
             </div>
             
         </section>
-    </div>
+        
+    </section>
     
 </main>
 

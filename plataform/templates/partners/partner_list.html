@@ -1,8 +1,8 @@
 {% extends 'company/base.html' %}
 {% load static %}
-{% block 'title' %} {{ title }} {% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
-{% block 'container %}
+{% block container %}
 
 <main class="container-fluid py-3">
 
@@ -10,10 +10,10 @@
 
     {% include 'messages.html' %}
 
-    <section class="row">
+    <section class="row my-2">
 
         <div class="col-md-10">
-            <h2 class="text-success">Gerenciar Parceiros</h2>
+            <h3 class="text-success">Gerenciar Parceiros</h3>
         </div>
 
         <div class="col-md-2">
@@ -36,7 +36,7 @@
                     <input type="text" placeholder="Buscar pelo Apelido" class="form-control" name="nickname">
                 </section>
 
-                <section class="col-md-2">
+                <section class="col-md-2 mb-2">
                     <select class="form-control" name="groups">
                         <option value="">Escolha Grupo</option>
                         {% for group in groups %}
@@ -45,7 +45,7 @@
                     </select>
                 </section>
 
-                <section class="col-md-2">
+                <section class="col-md-2 mb-2">
                     <select class="form-control" name="subgroups">
                         <option value="">Escolha SubGrupo</option>
                         {% for subgroup in subgroups %}
@@ -63,12 +63,10 @@
 
         <table class="table table-sm table-responsive-sm table-hover mt-2">
 
-            <thead class="">
+            <thead class="thead-dark">
                 <tr>
                     <th>Status</th>
                     <th>Apelido</th>
-                    <th>Registros</th>
-                    <th>Em Aberto</th>
                     <th>Phone1</th>
                     <th>Phone2</th>
                     <th>Documento</th>
@@ -91,12 +89,6 @@
                         {% endif %}
                     </td>
                     <td><a href="{% url 'plataform:partner_view' partner.id %}">{{ partner.nickname }}</a></td>
-                    <td>
-                        <img src="">
-                    </td>
-                    <td>
-                        <img src="">
-                    </td>
                     <td>{{ partner.phone1 }}</td>
                     <td>{{ partner.phone2 }}</td>
                     <td>{{ partner.document }}</td>

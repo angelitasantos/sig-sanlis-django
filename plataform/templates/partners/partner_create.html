@@ -1,19 +1,32 @@
 {% extends 'company/base.html' %}
 {% load static %}
-{% block 'title' %} {{ title }} {% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
-{% block 'container %}
+{% block container %}
 
 <main class="container-fluid py-3">
 
     {% include 'breadcrumb.html' %}
 
-    <div class="container-fluid mb-5">
+    <section class="row my-2">
 
-        <section class="text-center mb-3">
-            <h3 class="text-success">Novo Parceiro</h3>
-            {% include 'messages.html' %}
-        </section>
+        <div class="col-md-10">
+            <h3 class="text-success">Criar Parceiro</h3>
+        </div>
+
+        <div class="col-md-2">
+            <a href="{% url 'plataform:partners' %}">
+                <button type="button" class="btn btn-success btn-sm px-5">
+                    <span class="fa fa-arrow-left"></span> Voltar
+                </button>
+            </a>
+        </div>
+
+    </section>
+
+    <section class="container-fluid mb-3">
+
+        {% include 'messages.html' %}
         
         <section class="row">
 
@@ -22,51 +35,51 @@
                 <form action="{% url 'plataform:partner_create' %}" method="POST">
                     {% csrf_token %}
 
-                    <input type="hidden" placeholder="" class="form-control" name="company" value="{{ company_id_value }}">
+                    <input type="hidden" class="form-control" name="company" value="{{ company_id_value }}">
 
                     <div class="row">
                         <div class="col-sm-6">
-                            <span>Apelido*:</span>
-                            <input type="text" placeholder="" class="form-control" name="nickname">
+                            <span>Apelido *</span>
+                            <input type="text" class="form-control" name="nickname">
                         </div>
                         <div class="col-sm-6">
-                            <span>Documento*:</span>
-                            <input type="text" placeholder="" class="form-control" name="document">
-                        </div>
-                    </div>
-
-                    <div class="row mt-2">
-                        <div class="col-sm-6">
-                            <span>Nome:</span>
-                            <input type="text" placeholder="" class="form-control" name="first_name">
-                        </div>
-                        <div class="col-sm-6">
-                            <span>Sobrenome:</span>
-                            <input type="text" placeholder="" class="form-control" name="last_name">
+                            <span>Documento *</span>
+                            <input type="text" class="form-control" name="document">
                         </div>
                     </div>
 
                     <div class="row mt-2">
                         <div class="col-sm-6">
-                            <span>Telefone 1:</span>
-                            <input type="text" placeholder="" class="form-control" name="phone1">
+                            <span>Nome</span>
+                            <input type="text" class="form-control" name="first_name">
                         </div>
                         <div class="col-sm-6">
-                            <span>Telefone 2:</span>
-                            <input type="text" placeholder="" class="form-control" name="phone2">
+                            <span>Sobrenome</span>
+                            <input type="text" class="form-control" name="last_name">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-6">
+                            <span>Telefone 1</span>
+                            <input type="text" class="form-control" name="phone1">
+                        </div>
+                        <div class="col-sm-6">
+                            <span>Telefone 2</span>
+                            <input type="text" class="form-control" name="phone2">
                         </div>
                     </div>
 
                     <div class="row mt-2">
                         <div class="col-sm-12">
-                            <span class="mt-2">E-mail:</span>
-                            <input type="email" placeholder="" class="form-control" name="email">
+                            <span class="mt-2">E-mail</span>
+                            <input type="email" class="form-control" name="email">
                         </div>
                     </div>  
 
                     <div class="row mt-2">
                         <div class="col-sm-2">
-                            <span>Tipo Parceiro:</span>
+                            <span>Tipo Parceiro</span>
                             <select name="type_partners" class="form-control">
                                 <option value="1">Cliente</option>
                                 <option value="2">Fornecedor</option>
@@ -76,21 +89,21 @@
                             </select>
                         </div>
                         <div class="col-sm-2">
-                            <span>Tipo Pessoa:</span>
+                            <span>Tipo Pessoa</span>
                             <select name="type_person" class="form-control">
                                 <option value="F">Física</option>
                                 <option value="J">Jurídica</option>
                             </select>
                         </div>
                         <div class="col-sm-2">
-                            <span>Sexo:</span>
+                            <span>Sexo</span>
                             <select name="gender" class="form-control">
                                 <option value="M">Masculino</option>
                                 <option value="F">Feminino</option>
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <span>Grupo:</span>
+                            <span>Grupo</span>
                             <select name="group" class="form-control">
                                 <option value="">Sem Grupo</option> 
                                 {% for group in groups %}
@@ -99,7 +112,7 @@
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <span>SubGrupo:</span>
+                            <span>SubGrupo</span>
                             <select name="subgroup" class="form-control">
                                 <option value="">Sem SubGrupo</option> 
                                 {% for subgroup in subgroups %}
@@ -111,7 +124,7 @@
 
                     <div class="row my-3">
                         <div class="col-sm-10">
-                            <h6>* Apelido e Documento não podem ficar vazios.</h6>
+                            <h6>* Os campos Apelido e Documento não podem ficar vazios.</h6>
                         </div>
                         <div class="col-sm-2">
                             <input type="submit" class="btn btn-success btn-sm px-5" value="Cadastrar">
@@ -123,7 +136,8 @@
             </div>
             
         </section>
-    </div>
+        
+    </section>
     
 </main>
 

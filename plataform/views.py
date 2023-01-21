@@ -24,18 +24,18 @@ def dashboard(request):
 # Partners
 @login_required(login_url='/auth/login/')
 def partners(request):
-    title = sig + 'Listar Parceiros'
+    title = sig + 'Lista de Parceiros'
 
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
     
     if user_token_company.exists():
-        nickname_filtrar = request.GET.get('nickname')
-        company_id_value = user_token_company_id[0][0]
-        partners = Partner.objects.filter(company_id=company_id_value)
+        company_id = user_token_company_id[0][0]
+        partners = Partner.objects.filter(company_id=company_id)
+        groups = PartnerGroup.objects.filter(company_id=company_id)
+        subgroups = PartnerSubGroup.objects.filter(company_id=company_id)
         
+        nickname_filtrar = request.GET.get('nickname')
         if nickname_filtrar:
             partners = partners.filter(nickname__icontains = nickname_filtrar)
 
@@ -47,22 +47,21 @@ def partners(request):
         if subgroups_filtrar:
             partners = partners.filter(subgroup = subgroups_filtrar)
 
-        groups = PartnerGroup.objects.filter(company_id=company_id_value)
-        subgroups = PartnerSubGroup.objects.filter(company_id=company_id_value)
-
-        context =   {   'title': title,
-                        'users': users,
+        context =   {   
+                        'title': title,
                         'partners': partners,
                         'groups': groups,
                         'subgroups': subgroups,
-                        'user_login': user_login[0]}
+                        'user_login': request.user
+                    }
         render(request, 'partners/partner_list.html', context)
 
     elif user_token_company_id.count() == 0:
         messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
+        context =   {   
+                        'title': title,
+                        'user_login': request.user
+                    }
         return redirect('/painel/')
 
     return render(request, 'partners/partner_list.html', context)
@@ -71,24 +70,25 @@ def partners(request):
 @login_required(login_url='/auth/login/')
 def partner_create(request):
     title = sig + 'Criar Parceiro'
-    user_login = User.objects.filter(username=request.user)
-    users = User.objects.all()
 
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
+    company_id = user_token_company_id[0][0]
 
-    groups = PartnerGroup.objects.filter(company_id=company_id_value)
-    subgroups = PartnerSubGroup.objects.filter(company_id=company_id_value)
+    groups = PartnerGroup.objects.filter(company_id=company_id)
+    subgroups = PartnerSubGroup.objects.filter(company_id=company_id)
     
-    context =   {   'title': title,
-                    'user_login': user_login[0],
-                    'company_id_value': company_id_value,
+    context =   {   
+                    'title': title,
+                    'user_login': request.user,
+                    'company_id_value': company_id,
                     'groups': groups,
-                    'subgroups': subgroups,
-                    'users': users}
+                    'subgroups': subgroups
+                }
+    
     if request.method == "GET":
         return render(request, 'partners/partner_create.html', context)
+    
     elif request.method == "POST":
         nickname = request.POST.get('nickname').upper()
         first_name = request.POST.get('first_name').upper()
@@ -116,7 +116,8 @@ def partner_create(request):
             messages.add_message(request, constants.ERROR, 'Já existe um parceiro cadastrado com este nome!!!')
             return render(request, 'partners/partner_create.html', context)
 
-        partner = Partner(  nickname=nickname,
+        partner = Partner(  
+                            nickname=nickname,
                             first_name=first_name,
                             last_name=last_name,
 
@@ -142,32 +143,29 @@ def partner_create(request):
 @login_required(login_url='/auth/login/')
 def partner_view(request, id):
     title = sig + 'Visualizar Parceiro'
-    user_login = User.objects.filter(username=request.user)
 
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
+    company_id = user_token_company_id[0][0]
 
-    groups = PartnerGroup.objects.filter(company_id=company_id_value)
-    subgroups = PartnerSubGroup.objects.filter(company_id=company_id_value)
+    groups = PartnerGroup.objects.filter(company_id=company_id)
+    subgroups = PartnerSubGroup.objects.filter(company_id=company_id)
 
-    partners_exists = Partner.objects.filter(id=id, company_id=company_id_value)
+    partners_exists = Partner.objects.filter(id=id, company_id=company_id)
     if not partners_exists.exists():
         messages.add_message(request, constants.ERROR, 'Você não tem acesso a este identificador !!!')
         return redirect('/painel/parceiros')
 
-    users = User.objects.all()
     partner = get_object_or_404(Partner, id=id)
-    partners = Partner.objects.filter(company_id=company_id_value)
 
-    return render(request, 'partners/partner_update.html', { 'title': title,
-                                                            'users': users,
-                                                            'user_login': user_login[0],
-                                                            'company_id_value': company_id_value,
-                                                            'groups': groups,
-                                                            'subgroups': subgroups,
-                                                            'partner': partner,
-                                                            'partners': partners})
+    return render(request, 'partners/partner_update.html', { 
+                                                                'title': title,
+                                                                'user_login': request.user,
+                                                                'company_id_value': company_id,
+                                                                'groups': groups,
+                                                                'subgroups': subgroups,
+                                                                'partner': partner,
+                                                            })
 
 
 @login_required(login_url='/auth/login/')
@@ -192,30 +190,29 @@ def partner_update(request, id):
 
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
+    company_id = user_token_company_id[0][0]
 
-    groups = PartnerGroup.objects.filter(company_id=company_id_value)
-    subgroups = PartnerSubGroup.objects.filter(company_id=company_id_value)
+    groups = PartnerGroup.objects.filter(company_id=company_id)
+    subgroups = PartnerSubGroup.objects.filter(company_id=company_id)
 
-    partners_exists = Partner.objects.filter(id=id, company_id=company_id_value)
+    partners_exists = Partner.objects.filter(id=id, company_id=company_id)
     if not partners_exists.exists():
         messages.add_message(request, constants.ERROR, 'Você não tem acesso a este identificador !!!')
         return redirect('/painel/parceiros')
     
-    users = User.objects.all()
     partner = Partner.objects.get(id=id)
-    partners = Partner.objects.filter(id=id)
-    context =   {   'title': title,
-                    'users': users,
+    context =   {   
+                    'title': title,
                     'groups': groups,
                     'subgroups': subgroups,
                     'partner': partner,
-                    'partners': partners}
+                }
 
     if (len(nickname.strip()) == 0):
         messages.add_message(request, constants.ERROR, 'Preencha todos os campos !!!')
         return render(request, 'partners/partner_update.html', context)
 
+    partners = Partner.objects.filter(id=id)
     if partners.exists():
         try:    
             partner.nickname = nickname
@@ -249,9 +246,9 @@ def partner_update(request, id):
 def partner_delete(request, id):
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
+    company_id = user_token_company_id[0][0]
 
-    partners_exists = Partner.objects.filter(id=id, company_id=company_id_value)
+    partners_exists = Partner.objects.filter(id=id, company_id=company_id)
     if not partners_exists.exists():
         messages.add_message(request, constants.ERROR, 'Você não tem acesso a este identificador !!!')
         return redirect('/painel/parceiros')
