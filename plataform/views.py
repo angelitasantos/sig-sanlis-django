@@ -13,15 +13,16 @@ sig = 'SIG SANLIS | '
 @login_required(login_url='/auth/login/')
 def dashboard(request):
     title = sig + 'Painel'
-    user_login = User.objects.filter(username=request.user)
 
-    context =   {   'title': title,
-                    'user_login': user_login[0]}
+    context =   {   
+                    'title': title,
+                    'user_login': request.user
+                }
 
     return render(request, 'painel.html', context)
 
 
-# Partners
+############################################################
 @login_required(login_url='/auth/login/')
 def partners(request):
     title = sig + 'Lista de Parceiros'
@@ -259,21 +260,21 @@ def partner_delete(request, id):
         return redirect('/painel/parceiros')
 
 
-# Items
+############################################################
 @login_required(login_url='/auth/login/')
 def items(request):
-    title = sig + 'Listar Items'
+    title = sig + 'Lista de Items'
 
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
     
     if user_token_company.exists():
-        title_filtrar = request.GET.get('title')
-        company_id_value = user_token_company_id[0][0]
-        items = Item.objects.filter(company_id=company_id_value)
-
+        company_id = user_token_company_id[0][0]
+        items = Item.objects.filter(company_id=company_id)
+        categories = Category.objects.filter(company_id=company_id)
+        un_meds = UnMed.objects.filter(company_id=company_id)
+        brands = Brand.objects.filter(company_id=company_id)
+        
         categories_filtrar = request.GET.get('categories')
         if categories_filtrar:
             items = items.filter(category = categories_filtrar)
@@ -282,27 +283,26 @@ def items(request):
         if brands_filtrar:
             items = items.filter(brand = brands_filtrar)
 
-        categories = Category.objects.filter(company_id=company_id_value)
-        un_meds = UnMed.objects.filter(company_id=company_id_value)
-        brands = Brand.objects.filter(company_id=company_id_value)
-        
+        title_filtrar = request.GET.get('title')
         if title_filtrar:
             items = items.filter(title__icontains = title_filtrar)
 
-        context =   {   'title': title,
-                        'users': users,
+        context =   {   
+                        'title': title,
                         'items': items,
                         'categories': categories,
                         'un_meds': un_meds,
                         'brands': brands,
-                        'user_login': user_login[0]}
+                        'user_login': request.user
+                    }
         render(request, 'items/item_list.html', context)
 
     elif user_token_company_id.count() == 0:
         messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   'title': title,
-                        'users': users,
-                        'user_login': user_login[0]}
+        context =   {   
+                        'title': title,
+                        'user_login': request.user
+                    }
         return redirect('/painel/')
 
     return render(request, 'items/item_list.html', context)
@@ -311,26 +311,27 @@ def items(request):
 @login_required(login_url='/auth/login/')
 def item_create(request):
     title = sig + 'Criar Item'
-    user_login = User.objects.filter(username=request.user)
-    users = User.objects.all()
 
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
+    company_id = user_token_company_id[0][0]
 
-    categories = Category.objects.filter(company_id=company_id_value)
-    un_meds = UnMed.objects.filter(company_id=company_id_value)
-    brands = Brand.objects.filter(company_id=company_id_value)
+    categories = Category.objects.filter(company_id=company_id)
+    un_meds = UnMed.objects.filter(company_id=company_id)
+    brands = Brand.objects.filter(company_id=company_id)
     
-    context =   {   'title': title,
-                    'user_login': user_login[0],
-                    'company_id_value': company_id_value,
+    context =   {   
+                    'title': title,
+                    'user_login': request.user,
+                    'company_id_value': company_id,
                     'categories': categories,
                     'un_meds': un_meds,
-                    'brands': brands,
-                    'users': users}
+                    'brands': brands
+                }
+    
     if request.method == "GET":
         return render(request, 'items/item_create.html', context)
+    
     elif request.method == "POST":
         title = request.POST.get('title').upper()
         description = request.POST.get('description')
@@ -369,7 +370,8 @@ def item_create(request):
         if items.exists():
             messages.add_message(request, constants.ERROR, 'Já existe um item cadastrado com este nome!!!')
 
-        item = Item(    title=title,
+        item = Item(    
+                        title=title,
                         description=description,
                         location=location,
                         reference=reference,
@@ -387,7 +389,7 @@ def item_create(request):
                         category_id=category_id,
                         brand_id=brand_id,
                         status=status
-                        )
+                    )
         item.save()
 
         messages.add_message(request, constants.SUCCESS, 'Item Cadastrado com Sucesso!!!')
@@ -397,34 +399,33 @@ def item_create(request):
 @login_required(login_url='/auth/login/')
 def item_view(request, id):
     title = sig + 'Visualizar Item'
-    user_login = User.objects.filter(username=request.user)
 
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
+    company_id = user_token_company_id[0][0]
 
-    items_exists = Item.objects.filter(id=id, company_id=company_id_value)
+    items_exists = Item.objects.filter(id=id, company_id=company_id)
     if not items_exists.exists():
         messages.add_message(request, constants.ERROR, 'Você não tem acesso a este identificador !!!')
         return redirect('/painel/itens')
 
-    users = User.objects.all()
     item = get_object_or_404(Item, id=id)
-    items = Item.objects.filter(company_id=company_id_value)
+    items = Item.objects.filter(company_id=company_id)
 
-    categories = Category.objects.filter(company_id=company_id_value)
-    un_meds = UnMed.objects.filter(company_id=company_id_value)
-    brands = Brand.objects.filter(company_id=company_id_value)
+    categories = Category.objects.filter(company_id=company_id)
+    un_meds = UnMed.objects.filter(company_id=company_id)
+    brands = Brand.objects.filter(company_id=company_id)
 
-    return render(request, 'items/item_update.html', { 'title': title,
-                                                        'users': users,
-                                                        'user_login': user_login[0],
-                                                        'company_id_value': company_id_value,
-                                                        'categories': categories,
-                                                        'un_meds': un_meds,
-                                                        'brands': brands,
-                                                        'item': item,
-                                                        'items': items})
+    return render(request, 'items/item_update.html',    { 
+                                                            'title': title,
+                                                            'user_login': request.user,
+                                                            'company_id': company_id,
+                                                            'categories': categories,
+                                                            'un_meds': un_meds,
+                                                            'brands': brands,
+                                                            'item': item,
+                                                            'items': items
+                                                        })
 
 
 @login_required(login_url='/auth/login/')
@@ -461,27 +462,27 @@ def item_update(request, id):
 
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
+    company_id = user_token_company_id[0][0]
 
-    items_exists = Item.objects.filter(id=id, company_id=company_id_value)
+    items_exists = Item.objects.filter(id=id, company_id=company_id)
     if not items_exists.exists():
         messages.add_message(request, constants.ERROR, 'Você não tem acesso a este identificador !!!')
         return redirect('/painel/itens')
 
-    categories = Category.objects.filter(company_id=company_id_value)
-    un_meds = UnMed.objects.filter(company_id=company_id_value)
-    brands = Brand.objects.filter(company_id=company_id_value)
+    categories = Category.objects.filter(company_id=company_id)
+    un_meds = UnMed.objects.filter(company_id=company_id)
+    brands = Brand.objects.filter(company_id=company_id)
     
-    users = User.objects.all()
     item = Item.objects.get(id=id)
     items = Item.objects.filter(id=id)
-    context =   {   'title': title,
-                    'users': users,
+    context =   {   
+                    'title': title,
                     'categories': categories,
                     'un_meds': un_meds,
                     'brands': brands,
                     'item': item,
-                    'items': items}
+                    'items': items
+                }
 
     if (len(title.strip()) == 0):
         messages.add_message(request, constants.ERROR, 'Preencha todos os campos !!!')
@@ -518,9 +519,9 @@ def item_update(request, id):
 def item_delete(request, id):
     user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
+    company_id = user_token_company_id[0][0]
 
-    items_exists = Item.objects.filter(id=id, company_id=company_id_value)
+    items_exists = Item.objects.filter(id=id, company_id=company_id)
     if not items_exists.exists():
         messages.add_message(request, constants.ERROR, 'Você não tem acesso a este identificador !!!')
         return redirect('/painel/itens')
@@ -531,7 +532,7 @@ def item_delete(request, id):
         return redirect('/painel/itens')
 
 
-# UnMed / Category
+############################################################
 @login_required(login_url='/auth/login/')
 def un_med_create(request):
     title = sig + 'Criar Item'
@@ -572,6 +573,7 @@ def category_create(request):
         return render(request, 'items/item_create.html', context)
 
 
+############################################################
 # Ajax para Saldo
 def produto_json(request, pk):
     ''' Retorna o produto, id e estoque. '''

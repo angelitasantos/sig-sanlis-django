@@ -1,8 +1,8 @@
 {% extends 'company/base.html' %}
 {% load static %}
-{% block 'title' %} {{ title }} {% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
-{% block 'container %}
+{% block container %}
 
 <main class="container-fluid py-3">
 
@@ -10,10 +10,10 @@
 
     {% include 'messages.html' %}
 
-    <section class="row">
+    <section class="row my-2">
 
         <div class="col-md-10">
-            <h2 class="text-success">Gerenciar Itens</h2>
+            <h3 class="text-success">Gerenciar Itens</h3>
         </div>
 
         <div class="col-md-2">
@@ -32,11 +32,11 @@
             {% csrf_token %}
             <div class="row">
                 
-                <section class="col-md-5 mb-2">
+                <section class="col-md-4 mb-2">
                     <input type="text" placeholder="Buscar pelo Nome" class="form-control" name="title">
                 </section>
 
-                <section class="col-md-2">
+                <section class="col-md-3 mb-2">
                     <select class="form-control" name="categories">
                         <option value="">Escolha uma Categoria</option>
                         {% for category in categories %}
@@ -45,7 +45,7 @@
                     </select>
                 </section>
 
-                <section class="col-md-2">
+                <section class="col-md-2 mb-2">
                     <select class="form-control" name="brands">
                         <option value="">Escolha uma Marca</option>
                         {% for brand in brands %}
@@ -63,7 +63,7 @@
 
         <table class="table table-sm table-responsive-sm table-hover mt-2">
 
-            <thead class="">
+            <thead class="thead-dark">
                 <tr>
                     <th>Status</th>
                     <th>Nome</th>
