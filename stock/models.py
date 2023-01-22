@@ -40,7 +40,7 @@ class Estoque(TimeStampedModel):
     tipo_registro = models.CharField(max_length=1, choices=choices_tipo_registro, default="2")
     status = models.CharField(max_length=1, choices=choices_status, default="2")
 
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     partner = models.ForeignKey(Partner, on_delete=models.CASCADE)
     funcionario = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
     nf = models.PositiveIntegerField('nota fiscal', null=True, blank=True)

@@ -1,6 +1,6 @@
 {% extends 'company/base.html' %}
 {% load static %}
-{% block 'title' %} {{ title }} {% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
 {% load widget_tweaks %}
 {% load bootstrap %}
@@ -19,7 +19,7 @@
 
 {% endblock css %}
 
-{% block 'container %}
+{% block container %}
 
 <main class="container-fluid py-3">
 
@@ -50,7 +50,7 @@
       <form method="POST" novalidate>
         {% csrf_token %}
 
-        <div class="row mt-3">
+        <section class="row mt-3">
           
           <legend style="border-bottom: 1px solid #e5e5e5;">Dados Gerais</legend>
 
@@ -58,7 +58,7 @@
 
           <div class="col-sm-3">
             
-            <div class="form-group{% if field.errors %} has-error {% endif%}">
+            <div class="form-group{% if field.errors %} has-error {% endif %}">
 
               <label for="{{ field.id_for_label }}">
                 {% if field.field.required %}
@@ -80,9 +80,9 @@
           {% endfor %}
           {{ formset.management_form }}
 
-        </div>
+        </section>
 
-        <div class="row pt-3">
+        <section class="row pt-3">
 
           <legend style="border-bottom: 1px solid #e5e5e5;">Itens</legend>
           
@@ -98,28 +98,28 @@
 
           </div>
 
-        </div>
+        </section>
 
-        <span id="add-item" class="btn btn-success" style="margin-top: 10px;">
+        <span id="add-item" class="btn btn-sm btn-success">
           <i class="fa fa-plus px-2"></i> Adicionar
         </span>
 
-        <div class="row float-right">
+        <section class="row float-right">
 
-          <div class="col-sm-12" style="margin-top: 10px;">
+          <div class="col-sm-12 my-5">
             <div class="form-inline buttons">
-              <button class="btn btn-primary m-5 px-5" value="Save">
+              <button class="btn btn-sm btn-primary mx-2" value="Save">
                 <i class="fa fa-floppy-o px-2"></i>
                 Salvar
               </button>
-              <a href="{% url 'stock:stock_sale_list' %}" class="btn btn-danger m-5 px-5">
+              <a href="{% url 'stock:stock_sale_list' %}" class="btn btn-sm btn-danger px-2">
                 <i class="fa fa-times px-2"></i>
                 Cancelar
               </a>
             </div>
           </div>
 
-        </div>
+        </section>
 
       </form>
 

@@ -39,8 +39,7 @@ def stock_sale_list(request):
     subtitle = 'Vendas'
     template_name = 'stock_list.html'
 
-    user = User.objects.filter(username=request.user).values('id')
-    user_token_company = TokenUser.objects.filter(user_id=user[0]['id']).values('company_id')
+    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     company_id = user_token_company[0]['company_id']
     
     objects = StockSale.objects.filter(company_id=company_id)
@@ -49,7 +48,7 @@ def stock_sale_list(request):
                     'subtitle': subtitle,
                     'user_login': request.user,
                     'url_add': 'stock:stock_sale_add',
-                     'object_list': objects
+                    'object_list': objects
                 }
     return render(request, template_name, context)
 
@@ -60,8 +59,7 @@ def stock_service_list(request):
     subtitle = 'Serviços'
     template_name = 'stock_list.html'
 
-    user = User.objects.filter(username=request.user).values('id')
-    user_token_company = TokenUser.objects.filter(user_id=user[0]['id']).values('company_id')
+    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     company_id = user_token_company[0]['company_id']
 
     objects = StockService.objects.filter(company_id=company_id)
@@ -81,16 +79,15 @@ def stock_shopping_list(request):
     subtitle = 'Compras'
     template_name = 'stock_list.html'
 
-    user = User.objects.filter(username=request.user).values('id')
-    user_token_company = TokenUser.objects.filter(user_id=user[0]['id']).values('company_id')
+    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     company_id = user_token_company[0]['company_id']
 
     objects = StockShopping.objects.filter(company_id=company_id)
     context =   {
                     'title': title,
                     'subtitle': subtitle,
-                    'url_add': 'stock:stock_shopping_add',
                     'user_login': request.user,
+                    'url_add': 'stock:stock_shopping_add',
                     'object_list': objects
                 }
     return render(request, template_name, context)
@@ -102,8 +99,7 @@ def stock_production_list(request):
     subtitle = 'Produção'
     template_name = 'stock_list.html'
 
-    user = User.objects.filter(username=request.user).values('id')
-    user_token_company = TokenUser.objects.filter(user_id=user[0]['id']).values('company_id')
+    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     company_id = user_token_company[0]['company_id']
 
     objects = StockProduction.objects.filter(company_id=company_id)
@@ -123,8 +119,7 @@ def stock_inventary_list(request):
     subtitle = 'Inventário'
     template_name = 'stock_list.html'
 
-    user = User.objects.filter(username=request.user).values('id')
-    user_token_company = TokenUser.objects.filter(user_id=user[0]['id']).values('company_id')
+    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
     company_id = user_token_company[0]['company_id']
 
     objects = StockInventary.objects.filter(company_id=company_id)
@@ -243,58 +238,42 @@ def stock_inventary_detail(request, pk):
 #######################################################
 @login_required(login_url='/auth/login/')
 def stock_add(request, template_name, movimento, tipo_movimento, url, form, title, subtitle):
-    users = User.objects.all()
-    user_login = User.objects.filter(username=request.user)
-    user_token_company = TokenUser.objects.filter(user_id=request.user).values('company_id')
-    user_token_company_id = user_token_company.values_list('company_id')
-    company_id_value = user_token_company_id[0][0]
-    
-    if user_token_company.exists():
-        estoque_form = Estoque()
-        item_estoque_formset = inlineformset_factory(
-            Estoque,    
-            EstoqueItens,
-            form=form,
-            extra=0,
-            min_num=1,
-            validate_min=True,
+    estoque_form = Estoque()
+    item_estoque_formset = inlineformset_factory(
+        Estoque,    
+        EstoqueItens,
+        form=form,
+        extra=0,
+        min_num=1,
+        validate_min=True,
+    )
+    if request.method == 'POST':
+        form = EstoqueForm(request.POST, instance=estoque_form, prefix='main')
+        formset = item_estoque_formset(
+            request.POST,
+            instance=estoque_form,
+            prefix='estoque'
         )
-        if request.method == 'POST':
-            form = EstoqueForm(request.POST, instance=estoque_form, prefix='main')
-            formset = item_estoque_formset(
-                request.POST,
-                instance=estoque_form,
-                prefix='estoque'
-            )
-            if form.is_valid() and formset.is_valid():
-                form = form.save(commit=False)
-                form.funcionario = request.user
-                form.movimento = movimento
-                form.tipo_movimento = tipo_movimento
-                form.save()
-                formset.save()
-                stock_moviment(form)
-                return {'pk': form.pk}
-        else:
-            form = EstoqueForm(instance=estoque_form, prefix='main')
-            formset = item_estoque_formset(instance=estoque_form, prefix='estoque')
-        context =   {
-                        'form': form, 
-                        'formset': formset,
-                        'user_login': request.user,
-                        'title': title, 
-                        'subtitle': subtitle,
-                    }
-        return context  
-    elif user_token_company_id.count() == 0:
-        messages.add_message(request, constants.ERROR, 'Não encontramos uma empresa para o seu usuário !!!')
-        context =   {   
-                        'users': users,
-                        'user_login': request.user
-                    }
-        return redirect('/painel/')
-    
-    return render(request, template_name, context)
+        if form.is_valid() and formset.is_valid():
+            form = form.save(commit=False)
+            form.funcionario = request.user
+            form.movimento = movimento
+            form.tipo_movimento = tipo_movimento
+            form.save()
+            formset.save()
+            stock_moviment(form)
+            return {'pk': form.pk}
+    else:
+        form = EstoqueForm(instance=estoque_form, prefix='main')
+        formset = item_estoque_formset(instance=estoque_form, prefix='estoque')
+    context =   {
+                    'form': form, 
+                    'formset': formset,
+                    'user_login': request.user,
+                    'title': title, 
+                    'subtitle': subtitle,
+                }
+    return context
 
 
 @login_required(login_url='/auth/login/')
@@ -371,7 +350,10 @@ def stock_inventary_add(request):
     tipo_movimento = 'I'
     form=EstoqueItensEntradaForm
 
-    context = stock_add(request, template_name, movimento, tipo_movimento, url, form, title, subtitle)
+    context = stock_add(    
+                            request, template_name, movimento, tipo_movimento, 
+                            url, form, title, subtitle
+                        )
     if context.get('pk'):
         return HttpResponseRedirect(resolve_url(url, context.get('pk')))
     return render(request, template_name, context)
