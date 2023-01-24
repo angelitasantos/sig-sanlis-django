@@ -34,10 +34,12 @@
 
         <thead class="thead-dark">
           <tr>
-            <th>Item</th>
+            <th>Id do Registro</th>
             <th>NF</th>
             <th>Data</th>
-            <th>Funcionário</th>
+            <th>Parceiro</th>
+            <th class="text-center">Tipo Registro</th>
+            <th class="text-center">Status</th>
           </tr>
         </thead>
 
@@ -48,8 +50,10 @@
                 <a href="{{ object.get_absolute_url }}">{{ object }}</a>
               </td>
               <td>{{ object.nf_formated }}</td>
-              <td>{{ object.created }}</td>
-              <td>{{ object.funcionario.first_name }}</td>
+              <td>{{ object.created|date:"d/m/Y"|default:'---' }}</td>
+              <td>{{ object.partner.nickname }}</td>
+              <td class="text-center">{{ object.get_tipo_registro_display }}</td>
+              <td class="text-center">{{ object.get_status_display }}</td>
             </tr>
           {% endfor %}
         </tbody>
