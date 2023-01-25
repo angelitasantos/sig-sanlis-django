@@ -79,7 +79,7 @@
             </thead>
 
             <tbody class="table-group-divider">
-                {% for partner in partners %}
+                {% for partner in page.object_list %}
                 <tr class="tabela-linha">
                     <td>
                         {% if partner.status == 'A' %}
@@ -107,6 +107,8 @@
             </tbody>
 
         </table>
+
+        {% include 'pagination.html' %}
         
     </section>
 

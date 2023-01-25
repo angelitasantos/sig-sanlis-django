@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+
 from activation.models import TokenUser, Company
 from plataform.models import Item, Partner
 from .models import (   
@@ -20,6 +22,8 @@ from .forms import EstoqueForm, EstoqueItensEntradaForm, EstoqueItensSaidaForm
 
 
 sig = 'SIG SANLIS | '
+registers_for_page = 10
+
 
 #######################################################
 @login_required(login_url='/auth/login/')
@@ -43,12 +47,19 @@ def stock_sale_list(request):
     company_id = user_token_company[0]['company_id']
     
     objects = StockSale.objects.filter(company_id=company_id)
+    objects_paginator = Paginator(objects, registers_for_page)
+    page_number = request.GET.get('page')
+    page = objects_paginator.get_page(page_number)
+    url_page = 'stock:stock_sale_list'
+    
     context =   {
                     'title': title,
                     'subtitle': subtitle,
                     'user_login': request.user,
                     'url_add': 'stock:stock_sale_add',
-                    'object_list': objects
+                    'object_list': objects,
+                    'page': page,
+                    'url_page': url_page
                 }
     return render(request, template_name, context)
 
@@ -63,12 +74,19 @@ def stock_service_list(request):
     company_id = user_token_company[0]['company_id']
 
     objects = StockService.objects.filter(company_id=company_id)
+    objects_paginator = Paginator(objects, registers_for_page)
+    page_number = request.GET.get('page')
+    page = objects_paginator.get_page(page_number)
+    url_page = 'stock:stock_service_list'
+
     context =   {
                     'title': title,
                     'subtitle': subtitle,
                     'user_login': request.user,
                     'url_add': 'stock:stock_service_add',
-                    'object_list': objects
+                    'object_list': objects,
+                    'page': page,
+                    'url_page': url_page
                 }
     return render(request, template_name, context)
     
@@ -83,12 +101,19 @@ def stock_shopping_list(request):
     company_id = user_token_company[0]['company_id']
 
     objects = StockShopping.objects.filter(company_id=company_id)
+    objects_paginator = Paginator(objects, registers_for_page)
+    page_number = request.GET.get('page')
+    page = objects_paginator.get_page(page_number)
+    url_page = 'stock:stock_shopping_list'
+
     context =   {
                     'title': title,
                     'subtitle': subtitle,
                     'user_login': request.user,
                     'url_add': 'stock:stock_shopping_add',
-                    'object_list': objects
+                    'object_list': objects,
+                    'page': page,
+                    'url_page': url_page
                 }
     return render(request, template_name, context)
     
@@ -103,12 +128,19 @@ def stock_production_list(request):
     company_id = user_token_company[0]['company_id']
 
     objects = StockProduction.objects.filter(company_id=company_id)
+    objects_paginator = Paginator(objects, registers_for_page)
+    page_number = request.GET.get('page')
+    page = objects_paginator.get_page(page_number)
+    url_page = 'stock:stock_production_list'
+
     context =   {
                     'title': title,
                     'subtitle': subtitle,
                     'user_login': request.user,
                     'url_add': 'stock:stock_production_add',
-                    'object_list': objects
+                    'object_list': objects,
+                    'page': page,
+                    'url_page': url_page
                 }
     return render(request, template_name, context)
 
@@ -123,12 +155,19 @@ def stock_inventary_list(request):
     company_id = user_token_company[0]['company_id']
 
     objects = StockInventary.objects.filter(company_id=company_id)
+    objects_paginator = Paginator(objects, registers_for_page)
+    page_number = request.GET.get('page')
+    page = objects_paginator.get_page(page_number)
+    url_page = 'stock:stock_inventary_list'
+
     context =   {
                     'title': title,
                     'subtitle': subtitle,
                     'user_login': request.user,
                     'url_add': 'stock:stock_inventary_add',
-                    'object_list': objects
+                    'object_list': objects,
+                    'page': page,
+                    'url_page': url_page
                 }
     return render(request, template_name, context)
     

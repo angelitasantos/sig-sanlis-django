@@ -34,31 +34,33 @@
 
         <thead class="thead-dark">
           <tr>
-            <th>Id do Registro</th>
-            <th>NF</th>
-            <th>Data</th>
-            <th>Parceiro</th>
-            <th class="text-center">Tipo Registro</th>
-            <th class="text-center">Status</th>
+            <th style="width:100px">Id do Registro</th>
+            <th style="width:30px">NF</th>
+            <th style="width:30px">Data</th>
+            <th style="width:200px">Parceiro</th>
+            <th style="width:30px" class="text-center">Tipo Registro</th>
+            <th style="width:30px" class="text-center">Status</th>
           </tr>
         </thead>
 
         <tbody>
-          {% for object in object_list %}
+          {% for object in page.object_list %}
             <tr>
-              <td>
+              <td style="width:100px">
                 <a href="{{ object.get_absolute_url }}">{{ object }}</a>
               </td>
-              <td>{{ object.nf_formated }}</td>
-              <td>{{ object.created|date:"d/m/Y"|default:'---' }}</td>
-              <td>{{ object.partner.nickname }}</td>
-              <td class="text-center">{{ object.get_tipo_registro_display }}</td>
-              <td class="text-center">{{ object.get_status_display }}</td>
+              <td style="width:30px">{{ object.nf_formated }}</td>
+              <td style="width:30px">{{ object.created|date:"d/m/Y"|default:'---' }}</td>
+              <td style="width:200px">{{ object.partner.nickname }}</td>
+              <td style="width:30px" class="text-center">{{ object.get_tipo_registro_display }}</td>
+              <td style="width:30px" class="text-center">{{ object.get_status_display }}</td>
             </tr>
           {% endfor %}
         </tbody>
 
       </table>
+
+      {% include 'pagination.html' %}
       
     {% else %}
       <p class="alert alert-warning">Sem itens na lista.</p>

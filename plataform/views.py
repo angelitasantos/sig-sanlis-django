@@ -6,8 +6,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from activation.models import TokenUser, Company
 from .models import PartnerGroup, PartnerSubGroup, Partner, Category, UnMed, Item, Brand
+from django.core.paginator import Paginator
+
 
 sig = 'SIG SANLIS | '
+registers_for_page = 5
 
 
 @login_required(login_url='/auth/login/')
@@ -48,9 +51,15 @@ def partners(request):
         if subgroups_filtrar:
             partners = partners.filter(subgroup = subgroups_filtrar)
 
+        partners_paginator = Paginator(partners, registers_for_page)
+        page_number = request.GET.get('page')
+        page = partners_paginator.get_page(page_number)
+        url_page = 'plataform:partners'
+
         context =   {   
                         'title': title,
-                        'partners': partners,
+                        'page': page,
+                        'url_page': url_page,
                         'groups': groups,
                         'subgroups': subgroups,
                         'user_login': request.user
@@ -287,9 +296,15 @@ def items(request):
         if title_filtrar:
             items = items.filter(title__icontains = title_filtrar)
 
+        items_paginator = Paginator(items, registers_for_page)
+        page_number = request.GET.get('page')
+        page = items_paginator.get_page(page_number)
+        url_page = 'plataform:items'
+
         context =   {   
                         'title': title,
-                        'items': items,
+                        'page': page,
+                        'url_page': url_page,
                         'categories': categories,
                         'un_meds': un_meds,
                         'brands': brands,
