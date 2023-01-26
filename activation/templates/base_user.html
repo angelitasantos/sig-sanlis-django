@@ -19,15 +19,15 @@
       <div class="form-inline">
         <a class="btn btn-outline-success btn-sm mx-2" href="{% url 'plataform:dashboard' %}">
           <i class="fa fa-home"></i></a>
-        <a class="navbar-brand" href="{% url 'home' %}">SANLIS</a>
+        <a class="navbar-brand" href="{% url 'home:home' %}">SANLIS</a>
       </div>
       <form class="form-inline">
         <span class="text-light px-3">Usuário: {{ user_login }}</span>
-        <a href="{% url 'logout' %}"
+        <a href="{% url 'activation:logout' %}"
           onclick="return confirm('Você tem certeza que deseja sair do painel?')"
           class="btn btn-outline-success btn-sm mr-2">Logout
         </a>
-        <a class="btn btn-outline-success btn-sm" href="{% url 'companies' %}">
+        <a class="btn btn-outline-success btn-sm" href="{% url 'activation:companies' %}">
           <i class="fa fa-gear"></i></a>
       </form>
     </nav>

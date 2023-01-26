@@ -24,7 +24,7 @@
         </div>
           
         <div class="card-body">
-          <form action="{% url 'login' %}" method="POST">
+          <form action="{% url 'activation:login' %}" method="POST">
           {% csrf_token %}
 
             <span class="bold">Username</span>
@@ -41,7 +41,7 @@
 
         <div class="card-footer pt-4">
           <h4 class="text-center" style="bottom: 65px; font-weight: bold">Não tem uma conta ?&nbsp 
-          <a href="{% url 'register' %}" class="btn btn-outline-success btn-sm px-5">REGISTRAR</a>
+          <a href="{% url 'activation:register' %}" class="btn btn-outline-success btn-sm px-5">REGISTRAR</a>
         </div>
 
       </div>

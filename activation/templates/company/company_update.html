@@ -8,18 +8,31 @@
 
     {% include 'company/breadcrumb.html' %}
 
-    <div class="container-fluid mb-5">
-
-        <section class="text-center mb-3">
+    <section class="row my-2">
+    
+        <div class="col-md-10">
             <h3 class="text-success">Alterar Empresa</h3>
-            {% include 'messages.html' %}
-        </section>
+        </div>
+    
+        <div class="col-md-2">
+            <a href="{% url 'activation:companies' %}">
+                <button type="button" class="btn btn-success btn-sm px-5">
+                    <span class="fa fa-arrow-left"></span> Voltar
+                </button>
+            </a>
+        </div>
+    
+    </section>
+
+    <section class="container-fluid mb-5">
+
+        {% include 'messages.html' %}
         
         <section class="row">
 
             <div class="col-md-12 border border-success py-2">
 
-                <form action="{% url 'company_update' company.id %}" method="POST">
+                <form action="{% url 'activation:company_update' company.id %}" method="POST">
                     {% csrf_token %}
 
                     <div class="row mt-2">
@@ -176,7 +189,8 @@
             </div>
             
         </section>
-    </div>
+        
+    </section>
     
 </main>
 

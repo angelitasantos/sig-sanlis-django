@@ -12,12 +12,12 @@
 
     <section class="row">
 
-        <div class="col-md-9">
+        <div class="col-md-10">
             <h3 class="text-success">Gerenciar Empresas</h3>
         </div>
 
         <div class="col-md-2">
-            <a href="{% url 'company_create' %}">
+            <a href="{% url 'activation:company_create' %}">
                 <button type="button" class="btn btn-success btn-sm px-2">
                     <span class="fa fa-plus"></span> Nova Empresa
                 </button>
@@ -28,7 +28,7 @@
 
     <section class="body-box">
 
-        <form action="{% url 'companies' %}" method="GET">
+        <form action="{% url 'activation:companies' %}" method="GET">
             {% csrf_token %}
             <div class="row">
                 
@@ -45,7 +45,7 @@
 
         <table class="table table-sm table-responsive-sm table-hover mt-2">
 
-            <thead class="">
+            <thead class="thead-dark">
                 <tr>
                     <th>Nome Fantasia</th>
                     <th>Token</th>
@@ -61,16 +61,16 @@
             <tbody class="table-group-divider">
                 {% for company in companies %}
                 <tr class="tabela-linha">
-                    <td><a href="{% url 'company_view' company.id %}">{{ company.name }}</a></td>
+                    <td><a href="{% url 'activation:company_view' company.id %}">{{ company.name }}</a></td>
                     <td>{{ company.token_company }}</td>
                     <td>{{ company.phone }}</td>
                     <td>{{ company.whatsapp_number }}</td>
                     <td>{{ company.cnpj }}</td>
-                    <td>{{ company.start_data }}</td>
+                    <td>{{ company.start_data|date:"d/m/Y"|default:'---' }}</td>
                     <td>               
                         <span value="{{ company.user_id }}">{{ company.user_company }}</span> 
                     </td>
-                    <td><a class="btn-sm btn-danger" href="{% url 'company_delete' company.id %}"
+                    <td><a class="btn-sm btn-danger" href="{% url 'activation:company_delete' company.id %}"
                         onclick="return confirm('Você tem certeza que deseja excluir esta empresa ?')">
                         <i class="fa fa-trash"></i></a>
                     </td>
