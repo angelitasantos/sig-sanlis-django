@@ -31,9 +31,9 @@
     <section class="form-contact">
         
         <h1>Entre em Contato</h1>
-        <h3 id="company-email">Email: sanlisgestao@hotmail.com</h3>
+        <span id="company-email">Email: sanlisgestao@hotmail.com</span>
 
-        <form class="form" action="{% url 'contact' %}" method="get">
+        <form class="form" action="{% url 'home:contact' %}" method="get">
             <label class="label">
                 Nome: <br>
                 <input class="input" type="text" name="name" id="name">
