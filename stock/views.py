@@ -287,7 +287,7 @@ def stock_add(request, template_name, movimento, tipo_movimento, url, form, titl
         validate_min=True,
     )
     if request.method == 'POST':
-        form = EstoqueForm(request.POST, instance=estoque_form, prefix='main')
+        form = EstoqueForm(request.user, request.POST, instance=estoque_form, prefix='main')
         formset = item_estoque_formset(
             request.POST,
             instance=estoque_form,
@@ -303,7 +303,7 @@ def stock_add(request, template_name, movimento, tipo_movimento, url, form, titl
             stock_moviment(form)
             return {'pk': form.pk}
     else:
-        form = EstoqueForm(instance=estoque_form, prefix='main')
+        form = EstoqueForm(request.user, instance=estoque_form, prefix='main')
         formset = item_estoque_formset(instance=estoque_form, prefix='estoque')
     context =   {
                     'form': form, 
